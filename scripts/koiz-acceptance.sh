@@ -124,7 +124,31 @@ if [ -f "$H" ]; then
   [ "$miss" = 0 ]; say $? "10. docs/HANDOFF.md на месте и полон"
 else skip "10. хэндофф" "docs/HANDOFF.md в это дерево не входит"; fi
 
+# 11. Граф уроков покрывает базу целиком: по нему ходят вместо чтения всей базы,
+# и он пересобирается на каждой записи, а не по памяти агента.
+gr=$(node --input-type=module -e "
+import { writeGraph, state, active, activeRules } from '$KOIZ_ROOT/scripts/koiz.mjs'
+import { readFileSync } from 'node:fs'
+const dir = '$TMP/graph'
+writeGraph({ dir })
+const g = JSON.parse(readFileSync(dir + '/graph.json', 'utf8'))
+const st = state()
+const live = active(st).length + activeRules(st).length
+const nodes = g.nodes.filter(n => n.kind === 'lesson' || n.kind === 'rule').length
+console.log(live, nodes, g.links.length)
+" 2>/dev/null)
+set -- ${gr:-0 0 0}
+# На чистой машине базы уроков ещё нет, и графу неоткуда взяться. Это не провал прибора,
+# а отсутствие входа - ровно тот случай, ради которого заведён skip. Красить им изолированный
+# прогон значит требовать чужих данных от чистого дерева.
+if [ "${1:-0}" = "0" ]; then
+  skip "11. граф уроков" "на этой машине нет базы уроков (~/.claude/koiz/lessons.jsonl)"
+else
+  { [ "${1:-0}" = "${2:-x}" ] && [ "${3:-0}" -ge 1 ]; }
+  say $? "11. граф уроков покрывает базу целиком (уроков ${1:-?}, узлов ${2:-?}, рёбер ${3:-?})"
+fi
+
 echo
 if [ "$fails" != 0 ]; then echo "приёмка: красных пунктов $fails, пропущено $skips"; exit 1; fi
-if [ "$skips" = 0 ]; then echo "приёмка: все десять пунктов зелёные"; exit 0; fi
-echo "приёмка: красных нет, пропущено $skips из 10 - этих входов на машине нет"; exit 0
+if [ "$skips" = 0 ]; then echo "приёмка: все одиннадцать пунктов зелёные"; exit 0; fi
+echo "приёмка: красных нет, пропущено $skips из 11 - этих входов на машине нет"; exit 0

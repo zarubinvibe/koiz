@@ -77,6 +77,8 @@ A `SessionEnd` hook hands the instrument the transcript of the session that just
 
 The watchdog doing its job is not a failure. A blocker that fired, and any piece of evidence shorter than three meaningful words, never reach the base. Otherwise the debt would turn the gate red over nothing.
 
+<p align="center"><img src="docs/assets/pantheon/stage-capture.png" alt="A marble table with a stack of thin marble sheets and blue paths arriving at it from the left edge" width="100%"></p>
+
 **You get:** draft lessons collected without a single line typed by hand.
 
 ### Step 2: Find the cause
@@ -84,6 +86,8 @@ The watchdog doing its job is not a failure. A blocker that fired, and any piece
 A captured draft has an empty "why". Until the cause is found, the lesson is unfinished and does not go out as ready.
 
 The order matters and does not work in reverse. The machine takes the facts, a person or an agent adds the meaning. An agent that guesses facts writes convincing untruth.
+
+<p align="center"><img src="docs/assets/pantheon/stage-cause.png" alt="Koios with the axis rod raised, looking down at the open marble ledger resting on his palm" width="100%"></p>
 
 **You get:** a lesson with a cause instead of a description of the symptom.
 
@@ -93,6 +97,8 @@ The pin field takes five values: `hook`, `deny`, an instrument, a test, and "not
 
 "Nothing" is a legal value and an honest admission. It says the mechanism does not exist yet, and it is exactly what later raises the lesson as a debt.
 
+<p align="center"><img src="docs/assets/pantheon/stage-pin.png" alt="A gold pin driven straight through the page of an open marble ledger, its head standing above the page" width="100%"></p>
+
 **You get:** a record where you can see what closes the repeat.
 
 ### Step 4: Collapse into a rule
@@ -101,6 +107,8 @@ Merging on write is expensive and loses data, so it moved into a separate comman
 
 A stale lesson is never erased. It is closed by date and stays in history. It is not a lie, it simply stopped applying.
 
+<p align="center"><img src="docs/assets/pantheon/stage-collapse.png" alt="Three thin marble sheets converging into one thicker sheet on a marble table" width="100%"></p>
+
 **You get:** one rule instead of three records, and a base that does not grow forever.
 
 ### Step 5: The gate holds the work
@@ -108,6 +116,8 @@ A stale lesson is never erased. It is closed by date and stays in history. It is
 The `gate` command exits non-zero when a lesson came back and is still pinned to "nothing". In the owner's house that command stands in the nightly run, and it has already stopped it.
 
 There are two ways out and both are honest: close it with a mechanism, or admit the rule does not work and close it by date. A deferral needs a date and a reason.
+
+<p align="center"><img src="docs/assets/pantheon/stage-gate.png" alt="An upright marble plate with a clean rectangular opening cut through it, standing on a marble table" width="100%"></p>
 
 **You get:** a repeat nobody can walk past in silence.
 
@@ -215,7 +225,7 @@ This is one of the public [Olympuz projects](https://github.com/zarubinvibe/athe
 | project | Zeuz | Factory that turns an idea into a governed multi-agent workflow with gates, observability, and replay. | [Repository](https://github.com/zarubinvibe/zeuz) · [ZIP](https://github.com/zarubinvibe/zeuz/archive/refs/heads/main.zip) |
 | project | Lynceuz | Collects public web evidence at zero cost and stops with an honest reason when the safe routes end. | [Repository](https://github.com/zarubinvibe/lynceuz) · [ZIP](https://github.com/zarubinvibe/lynceuz/archive/refs/heads/main.zip) |
 | project | Iriz | macOS menu-bar dictation that decodes speech on your own Mac, fixes wrong keyboard layouts, and turns dictation into a ready task for an agent. | [Repository](https://github.com/zarubinvibe/iriz) · [ZIP](https://github.com/zarubinvibe/iriz/archive/refs/heads/main.zip) |
-| project | Mantoz | Runs a product past thousands of generated people before real ones see it, and reports how each group answered. | [Repository](https://github.com/zarubinvibe/mantoz) · [ZIP](https://github.com/zarubinvibe/mantoz/archive/refs/heads/main.zip) |
+| project | Mantoz | Puts an idea in front of five hundred people who do not exist, then shows how each group answered. | [Repository](https://github.com/zarubinvibe/mantoz) · [ZIP](https://github.com/zarubinvibe/mantoz/archive/refs/heads/main.zip) |
 | project | Koiz | A single lesson base for every project. Each failure is taken down to its cause, and the cause stays open until a hook, a gate or a test closes it. | [Repository](https://github.com/zarubinvibe/koiz) · [ZIP](https://github.com/zarubinvibe/koiz/archive/refs/heads/main.zip) |
 <!-- pantheon-family:end -->
 

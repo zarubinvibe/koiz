@@ -72,7 +72,12 @@
         "title_zh": "采集失败",
         "diagram_en": "Capture",
         "diagram_ru": "Съем",
-        "diagram_zh": "采集"
+        "diagram_zh": "采集",
+        "source_path": "docs/assets/pantheon/stage-capture.png",
+        "source_sha256": "185da20e6369be6395980d7c014ffc05d49be5ad422ee521328bd63df6c98a5d",
+        "published_path": "docs/assets/pantheon/stage-capture.png",
+        "published_sha256": "185da20e6369be6395980d7c014ffc05d49be5ad422ee521328bd63df6c98a5d",
+        "alt_ru": "Кадр этапа «Съем провала»: мраморная сцена Койза с осью-стержнем и сводом уроков"
       },
       {
         "id": "cause",
@@ -81,7 +86,12 @@
         "title_zh": "追出原因",
         "diagram_en": "Cause",
         "diagram_ru": "Причина",
-        "diagram_zh": "追因"
+        "diagram_zh": "追因",
+        "source_path": "docs/assets/pantheon/stage-cause.png",
+        "source_sha256": "246c6c36dbfa6d938e63a5c50098c9fe685fd255aefbad177a11cbcb367062ae",
+        "published_path": "docs/assets/pantheon/stage-cause.png",
+        "published_sha256": "246c6c36dbfa6d938e63a5c50098c9fe685fd255aefbad177a11cbcb367062ae",
+        "alt_ru": "Кадр этапа «Дознание причины»: мраморная сцена Койза с осью-стержнем и сводом уроков"
       },
       {
         "id": "pin",
@@ -90,7 +100,12 @@
         "title_zh": "固定到机制",
         "diagram_en": "Pin",
         "diagram_ru": "Закрепление",
-        "diagram_zh": "固定"
+        "diagram_zh": "固定",
+        "source_path": "docs/assets/pantheon/stage-pin.png",
+        "source_sha256": "8572e587aa957dccc97f754e0daca8e24e1392f0f0ae1364bc5262888b3d7568",
+        "published_path": "docs/assets/pantheon/stage-pin.png",
+        "published_sha256": "8572e587aa957dccc97f754e0daca8e24e1392f0f0ae1364bc5262888b3d7568",
+        "alt_ru": "Кадр этапа «Закрепление механизмом»: мраморная сцена Койза с осью-стержнем и сводом уроков"
       },
       {
         "id": "collapse",
@@ -99,7 +114,12 @@
         "title_zh": "归并成规则",
         "diagram_en": "Collapse",
         "diagram_ru": "Схлопывание",
-        "diagram_zh": "归并"
+        "diagram_zh": "归并",
+        "source_path": "docs/assets/pantheon/stage-collapse.png",
+        "source_sha256": "2241fa2b057ace8b738eb83ef7c7cd9cb456eb6f1e7263e87f67371f3c208b74",
+        "published_path": "docs/assets/pantheon/stage-collapse.png",
+        "published_sha256": "2241fa2b057ace8b738eb83ef7c7cd9cb456eb6f1e7263e87f67371f3c208b74",
+        "alt_ru": "Кадр этапа «Схлопывание в правило»: мраморная сцена Койза с осью-стержнем и сводом уроков"
       },
       {
         "id": "gate",
@@ -108,7 +128,12 @@
         "title_zh": "闸门拦住工作",
         "diagram_en": "Gate",
         "diagram_ru": "Ворота",
-        "diagram_zh": "闸门"
+        "diagram_zh": "闸门",
+        "source_path": "docs/assets/pantheon/stage-gate.png",
+        "source_sha256": "0d76593c048132878f86d435fdbc8d6d495983fc713b4f078c78e29166d100de",
+        "published_path": "docs/assets/pantheon/stage-gate.png",
+        "published_sha256": "0d76593c048132878f86d435fdbc8d6d495983fc713b4f078c78e29166d100de",
+        "alt_ru": "Кадр этапа «Ворота держат работу»: мраморная сцена Койза с осью-стержнем и сводом уроков"
       }
     ],
     "doc_frames": {
@@ -169,12 +194,32 @@
         "frames": [
           "assets/pantheon/doc-how-it-works.png"
         ]
+      },
+      {
+        "path": "docs/ONBOARDING-CHAT.md",
+        "frames": [
+          "assets/pantheon/doc-onboarding-chat.png"
+        ]
+      },
+      {
+        "path": "docs/ONBOARDING-CHAT.ru.md",
+        "frames": [
+          "assets/pantheon/doc-onboarding-chat.png"
+        ]
+      },
+      {
+        "path": "docs/ONBOARDING-CHAT.zh.md",
+        "frames": [
+          "assets/pantheon/doc-onboarding-chat.png"
+        ]
       }
     ]
   },
   "receipts": {
     "generation_path": ".github/pantheon/generation-receipt.json",
     "visual_judge_path": ".github/pantheon/visual-judge-receipt.json",
-    "prompt_path": ".github/pantheon/hero-source-prompt.txt"
+    "prompt_path": ".github/pantheon/hero-source-prompt.txt",
+    "stage_generation_path": ".github/pantheon/stage-generation-receipt.json",
+    "stage_visual_judge_path": ".github/pantheon/stage-visual-judge-receipt.json"
   }
 }

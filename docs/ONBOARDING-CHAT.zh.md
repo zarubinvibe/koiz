@@ -2,6 +2,8 @@
 
 这一页写给刚打开一个新克隆、需要向人解释自己的智能体。从上往下读，一步一步来，每一步都说清楚你在做什么、为什么这么做。
 
+<p align="center"><img src="assets/pantheon/doc-onboarding-chat.png" alt="科俄斯站在大理石桌后，面向为客人准备的空座位，掌上摊开教训图册，手中立着轴杖，座位前排着六段等待走过的浅蓝路径" width="100%"></p>
+
 <!-- owner-greeting:start -->
 
 > 你好。我是 Koiz，蜂群的审问者。

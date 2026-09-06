@@ -2,6 +2,8 @@
 
 [Русский](ONBOARDING-CHAT.ru.md) · [中文](ONBOARDING-CHAT.zh.md)
 
+<p align="center"><img src="assets/pantheon/doc-onboarding-chat.png" alt="Koios stands behind the marble table facing an empty seat for the guest, the open ledger on his palm and the axis rod in his hand, six short blue paths waiting in a row in front of the seat" width="100%"></p>
+
 This page is read by an agent, not by you. The agent runs the conversation from it: it says what
 it is about to do before doing it, and it stops wherever the choice is yours.
 

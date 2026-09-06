@@ -8,3 +8,5 @@
 (英 [docs/ONBOARDING-CHAT.md](docs/ONBOARDING-CHAT.md), 中
 [docs/ONBOARDING-CHAT.zh.md](docs/ONBOARDING-CHAT.zh.md)). Открыли этот репозиторий впервые -
 идите туда и ведите человека по шагам, а не ставьте что-либо молча.
+
+Спрашивай граф знаний до чтения файлов: `graphify-out/graph.json` обходится бесплатно, без модели.

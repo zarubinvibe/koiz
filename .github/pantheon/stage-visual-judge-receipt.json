@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "kind": "pantheon-visual-judge",
+  "receipt_id": "6be242bb-fec2-4e04-bc8a-e7bef8e93c11",
+  "checked_at": "2026-09-06T21:33:32Z",
+  "runtime": "codex",
+  "tool": "view_image",
+  "route_id": "codex:view_image:managed-frontier",
+  "model": {
+    "id": "provider-managed",
+    "revision": "provider-managed",
+    "tier": "frontier"
+  },
+  "quality": "highest",
+  "verdict": "pass",
+  "human_reviewed": true,
+  "references": [
+    {
+      "role": "style-anchor",
+      "sha256": "ce524f9d22cb0092cb17aa280832e1b2ab2a77a0e01602065ec502232a3bb2d2"
+    },
+    {
+      "role": "column-reference",
+      "sha256": "9d32edd56ac55c4dd6d0425a28a2ac35035e9ab09073fc8ce0c1414b2edfb1bd"
+    },
+    {
+      "role": "bible-character",
+      "sha256": "0f6940ad424dbb14ca16bcdfb0c5ee8e4d9dede0cca3c2db9062e9eed6076b58"
+    },
+    {
+      "role": "bible-props",
+      "sha256": "baccce7b4bcd1b9b1a92a96ca18248ac98057fafa9f031927382fc7a72b864d7"
+    }
+  ],
+  "outputs": [
+    {
+      "role": "stage-01-capture",
+      "path": "docs/assets/pantheon/stage-capture.png",
+      "sha256": "185da20e6369be6395980d7c014ffc05d49be5ad422ee521328bd63df6c98a5d",
+      "verdict": "pass",
+      "hard_constraints": {
+        "column": true,
+        "ivory-background": true,
+        "white-marble": true,
+        "daylight": true,
+        "blue-gold-accents": true,
+        "no-dark-background": true,
+        "deity-symbol": true,
+        "text-accuracy": true,
+        "anchor-similarity": true,
+        "readme-render": true,
+        "series-coherence": true,
+        "stage-meaning": true
+      },
+      "scorecard": {
+        "column": 5,
+        "ivory-background": 5,
+        "white-marble": 5,
+        "daylight": 5,
+        "blue-gold-accents": 5,
+        "no-dark-background": 5,
+        "deity-symbol": 5,
+        "text-accuracy": 5,
+        "anchor-similarity": 5,
+        "readme-render": 5,
+        "series-coherence": 5,
+        "stage-meaning": 5
+      }
+    },
+    {
+      "role": "stage-02-cause",
+      "path": "docs/assets/pantheon/stage-cause.png",
+      "sha256": "246c6c36dbfa6d938e63a5c50098c9fe685fd255aefbad177a11cbcb367062ae",
+      "verdict": "pass",
+      "hard_constraints": {
+        "column": true,
+        "ivory-background": true,
+        "white-marble": true,
+        "daylight": true,
+        "blue-gold-accents": true,
+        "no-dark-background": true,
+        "deity-symbol": true,
+        "text-accuracy": true,
+        "anchor-similarity": true,
+        "readme-render": true,
+        "series-coherence": true,
+        "stage-meaning": true
+      },
+      "scorecard": {
+        "column": 5,
+        "ivory-background": 5,
+        "white-marble": 5,
+        "daylight": 5,
+        "blue-gold-accents": 5,
+        "no-dark-background": 5,
+        "deity-symbol": 5,
+        "text-accuracy": 5,
+        "anchor-similarity": 5,
+        "readme-render": 5,
+        "series-coherence": 5,
+        "stage-meaning": 5
+      }
+    },
+    {
+      "role": "stage-03-pin",
+      "path": "docs/assets/pantheon/stage-pin.png",
+      "sha256": "8572e587aa957dccc97f754e0daca8e24e1392f0f0ae1364bc5262888b3d7568",
+      "verdict": "pass",
+      "hard_constraints": {
+        "column": true,
+        "ivory-background": true,
+        "white-marble": true,
+        "daylight": true,
+        "blue-gold-accents": true,
+        "no-dark-background": true,
+        "deity-symbol": true,
+        "text-accuracy": true,
+        "anchor-similarity": true,
+        "readme-render": true,
+        "series-coherence": true,
+        "stage-meaning": true
+      },
+      "scorecard": {
+        "column": 5,
+        "ivory-background": 5,
+        "white-marble": 5,
+        "daylight": 5,
+        "blue-gold-accents": 5,
+        "no-dark-background": 5,
+        "deity-symbol": 5,
+        "text-accuracy": 5,
+        "anchor-similarity": 5,
+        "readme-render": 5,
+        "series-coherence": 5,
+        "stage-meaning": 5
+      }
+    },
+    {
+      "role": "stage-04-collapse",
+      "path": "docs/assets/pantheon/stage-collapse.png",
+      "sha256": "2241fa2b057ace8b738eb83ef7c7cd9cb456eb6f1e7263e87f67371f3c208b74",
+      "verdict": "pass",
+      "hard_constraints": {
+        "column": true,
+        "ivory-background": true,
+        "white-marble": true,
+        "daylight": true,
+        "blue-gold-accents": true,
+        "no-dark-background": true,
+        "deity-symbol": true,
+        "text-accuracy": true,
+        "anchor-similarity": true,
+        "readme-render": true,
+        "series-coherence": true,
+        "stage-meaning": true
+      },
+      "scorecard": {
+        "column": 5,
+        "ivory-background": 5,
+        "white-marble": 5,
+        "daylight": 5,
+        "blue-gold-accents": 5,
+        "no-dark-background": 5,
+        "deity-symbol": 5,
+        "text-accuracy": 5,
+        "anchor-similarity": 5,
+        "readme-render": 5,
+        "series-coherence": 5,
+        "stage-meaning": 5
+      }
+    },
+    {
+      "role": "stage-05-gate",
+      "path": "docs/assets/pantheon/stage-gate.png",
+      "sha256": "0d76593c048132878f86d435fdbc8d6d495983fc713b4f078c78e29166d100de",
+      "verdict": "pass",
+      "hard_constraints": {
+        "column": true,
+        "ivory-background": true,
+        "white-marble": true,
+        "daylight": true,
+        "blue-gold-accents": true,
+        "no-dark-background": true,
+        "deity-symbol": true,
+        "text-accuracy": true,
+        "anchor-similarity": true,
+        "readme-render": true,
+        "series-coherence": true,
+        "stage-meaning": true
+      },
+      "scorecard": {
+        "column": 5,
+        "ivory-background": 5,
+        "white-marble": 5,
+        "daylight": 5,
+        "blue-gold-accents": 5,
+        "no-dark-background": 5,
+        "deity-symbol": 5,
+        "text-accuracy": 5,
+        "anchor-similarity": 5,
+        "readme-render": 5,
+        "series-coherence": 5,
+        "stage-meaning": 5
+      }
+    }
+  ]
+}

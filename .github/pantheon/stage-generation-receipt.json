@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "kind": "pantheon-generation",
+  "selection_mode": "managed-frontier",
+  "runtime": "codex",
+  "tool": "image_gen",
+  "route_id": "codex:image_gen:managed-frontier",
+  "model": {
+    "id": "provider-managed",
+    "revision": "provider-managed",
+    "tier": "frontier"
+  },
+  "quality": "highest",
+  "generation_id": "aff3d581-a942-4d93-aa6f-1bbdb40155e7",
+  "generated_at": "2026-09-06T21:33:32Z",
+  "capability_snapshot": {
+    "checked_at": "2026-09-06T21:33:32Z",
+    "routes": [
+      {
+        "id": "codex:image_gen:managed-frontier",
+        "rank": 1,
+        "available": true,
+        "tier": "frontier",
+        "quality": "highest",
+        "model": {
+          "id": "provider-managed",
+          "revision": "provider-managed",
+          "tier": "frontier"
+        }
+      }
+    ]
+  },
+  "prompt": {
+    "path": ".github/pantheon/stage-capture-prompt.txt",
+    "sha256": "f9d8b91c1f79e6e3250958692834f4f81ad78e12cf4dde4850e7b341ccd51baf"
+  },
+  "references": [
+    {
+      "role": "style-anchor",
+      "sha256": "ce524f9d22cb0092cb17aa280832e1b2ab2a77a0e01602065ec502232a3bb2d2"
+    },
+    {
+      "role": "column-reference",
+      "sha256": "9d32edd56ac55c4dd6d0425a28a2ac35035e9ab09073fc8ce0c1414b2edfb1bd"
+    },
+    {
+      "role": "bible-character",
+      "sha256": "0f6940ad424dbb14ca16bcdfb0c5ee8e4d9dede0cca3c2db9062e9eed6076b58"
+    },
+    {
+      "role": "bible-props",
+      "sha256": "baccce7b4bcd1b9b1a92a96ca18248ac98057fafa9f031927382fc7a72b864d7"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "codex-managed",
+      "route_id": "codex:image_gen:managed-frontier",
+      "generation_id": "aff3d581-a942-4d93-aa6f-1bbdb40155e7",
+      "prompt_sha256": "f9d8b91c1f79e6e3250958692834f4f81ad78e12cf4dde4850e7b341ccd51baf",
+      "reference_sha256": [
+        "ce524f9d22cb0092cb17aa280832e1b2ab2a77a0e01602065ec502232a3bb2d2",
+        "9d32edd56ac55c4dd6d0425a28a2ac35035e9ab09073fc8ce0c1414b2edfb1bd",
+        "0f6940ad424dbb14ca16bcdfb0c5ee8e4d9dede0cca3c2db9062e9eed6076b58",
+        "baccce7b4bcd1b9b1a92a96ca18248ac98057fafa9f031927382fc7a72b864d7"
+      ],
+      "outputs": [
+        {
+          "role": "stage-01-capture",
+          "source_sha256": "185da20e6369be6395980d7c014ffc05d49be5ad422ee521328bd63df6c98a5d",
+          "published_sha256": "185da20e6369be6395980d7c014ffc05d49be5ad422ee521328bd63df6c98a5d"
+        },
+        {
+          "role": "stage-02-cause",
+          "source_sha256": "246c6c36dbfa6d938e63a5c50098c9fe685fd255aefbad177a11cbcb367062ae",
+          "published_sha256": "246c6c36dbfa6d938e63a5c50098c9fe685fd255aefbad177a11cbcb367062ae"
+        },
+        {
+          "role": "stage-03-pin",
+          "source_sha256": "8572e587aa957dccc97f754e0daca8e24e1392f0f0ae1364bc5262888b3d7568",
+          "published_sha256": "8572e587aa957dccc97f754e0daca8e24e1392f0f0ae1364bc5262888b3d7568"
+        },
+        {
+          "role": "stage-04-collapse",
+          "source_sha256": "2241fa2b057ace8b738eb83ef7c7cd9cb456eb6f1e7263e87f67371f3c208b74",
+          "published_sha256": "2241fa2b057ace8b738eb83ef7c7cd9cb456eb6f1e7263e87f67371f3c208b74"
+        },
+        {
+          "role": "stage-05-gate",
+          "source_sha256": "0d76593c048132878f86d435fdbc8d6d495983fc713b4f078c78e29166d100de",
+          "published_sha256": "0d76593c048132878f86d435fdbc8d6d495983fc713b4f078c78e29166d100de"
+        }
+      ]
+    }
+  ],
+  "winner_id": "codex-managed"
+}

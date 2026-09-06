@@ -49,6 +49,9 @@ export function replay(ops) {
     else if (o.op === 'hit') { const t = L.get(o.ref); if (t) t.hits.push(o); seen.add(`${o.fp}|${o.session || ''}`) }
     else if (o.op === 'close') { const t = target(o.ref); if (t) t.closed = o }
     else if (o.op === 'ack') { const t = target(o.ref); if (t) t.acks.push(o) }
+    // Закрепление дописывается операцией, а не правкой записи: журнал остаётся неизменяемым,
+    // а история «сначала было ничем, потом закрыли хуком» - самое ценное, что в нём есть.
+    else if (o.op === 'pin') { const t = target(o.ref); if (t) { t.pin = o.pin; t.pin_ref = o.pin_ref || null } }
     else if (o.op === 'link') { const a = L.get(o.ref), b = L.get(o.to); if (a) a.links.add(o.to); if (b) b.links.add(o.ref) }
   }
   return { L, R, seen }
@@ -58,7 +61,9 @@ export const state = (db = DB) => replay(readOps(db))
 export const active = st => [...st.L.values()].filter(l => !l.closed)
 export const activeRules = st => [...st.R.values()].filter(r => !r.closed)
 export const occ = l => 1 + (l.hits?.length || 0)
-const textOf = l => [l.what, l.why, l.fix].filter(Boolean).join(' ')
+// Воспроизведение входит в текст урока не для красоты: по команде и ищут. Без него запрос
+// «cat > /usr/local/bin/tool» не находит урок, который ровно про эту команду и написан.
+const textOf = l => [l.what, l.why, l.fix, l.repro].filter(Boolean).join(' ')
 const ackLive = (l, day = today()) => (l.acks || []).some(a => !a.until || a.until >= day)
 
 function nextId(st, prefix, fpv) {
@@ -137,6 +142,41 @@ export function ackDebt(id, until, why, db = DB) {
   return { op: 'ack', id, until }
 }
 
+// Закрепить УЖЕ записанный урок. Отдельная операция, а не новая запись: повтор той же беды
+// второй записью ломает счёт повторов, ради которого база и заведена.
+export function pinLesson(id, pin, ref, db = DB) {
+  const st = state(db)
+  const t = st.L.get(id) || st.R.get(id)
+  if (!t) throw new Error(`нет такой записи: ${id}`)
+  if (!PINS.includes(pin)) throw new Error(`закрепление «${pin}» не из списка: ${PINS.join(' · ')}`)
+  if (pin !== 'ничем') {
+    if (!ref) throw new Error('закрепление названо, но не сказано чем: нужен --pin-ref <путь к механизму>')
+    if (!existsSync(expand(ref))) throw new Error(`механизма нет на диске: ${ref} - закрепление показывают, а не заявляют`)
+  }
+  writeOps(db, [{ op: 'pin', ref: id, at: now(), pin, pin_ref: ref || null, was: t.pin }])
+  return { op: 'pin', id, pin, from: t.pin }
+}
+
+// Очередь на закрепление: что закрывать механизмом в первую очередь. Порядок не по вкусу -
+// по цене повтора: сколько раз уже случалось, есть ли чем воспроизвести (значит, закрепимо
+// тестом), и насколько беда разрушительна по глаголу команды.
+const DESTRUCTIVE = /\b(rm|mv|cp|chmod|chown|git add|git reset|git checkout|push|drop|truncate|delete|перезапис|затёр|затер|стёр|стер|потер)/i
+
+export function nextToPin({ db = DB, limit = 5 } = {}) {
+  const st = state(db)
+  return [...active(st), ...activeRules(st)]
+    .filter(l => l.pin === 'ничем' && l.kind !== 'наблюдение' && (l.why || l.fix))
+    .map(l => ({
+      id: l.id, class: l.class, project: l.project, occ: occ(l),
+      what: (l.what || l.text || '').slice(0, 160), fix: (l.fix || '').slice(0, 160), repro: l.repro || null,
+      // Подсказка типа закрепления - от того, чем беда воспроизводится, а не от фантазии.
+      suggest: l.repro ? 'тест' : (DESTRUCTIVE.test(`${l.what} ${l.repro || ''}`) ? 'hook' : 'прибор'),
+      weight: occ(l) * 2 + (l.repro ? 1.5 : 0) + (DESTRUCTIVE.test(`${l.what} ${l.fix || ''}`) ? 2 : 0),
+    }))
+    .sort((a, b) => b.weight - a.weight || a.id.localeCompare(b.id))
+    .slice(0, limit)
+}
+
 // ── Выдача ─────────────────────────────────────────────────────────────────────
 // Отбор как в generative_agents: релевантность + важность (сколько раз повторилось)
 // + свежесть. Ключ поиска - класс ошибки, поэтому урок из adventure-book находится
@@ -160,7 +200,7 @@ export function ask(q, { project = null, cls = null, limit = 10, db = DB } = {})
   return scored.sort((a, b) => b.score - a.score).slice(0, limit).map(x => ({
     id: x.l.id, class: x.l.class, project: x.l.project, kind: x.l.op === 'rule' ? 'правило' : x.l.kind,
     occ: occ(x.l), pin: x.l.pin, pin_ref: x.l.pin_ref || null,
-    what: x.l.what || x.l.text, why: x.l.why || null, fix: x.l.fix || null, score: +x.score.toFixed(3),
+    what: x.l.what || x.l.text, why: x.l.why || null, fix: x.l.fix || null, repro: x.l.repro || null, score: +x.score.toFixed(3),
   }))
 }
 
@@ -433,6 +473,118 @@ ${written.map(f => `- [[${path.basename(f, '.md')}]]`).join('\n') || '- пока
   return { dir, written: written.length, files: written }
 }
 
+// ── Граф уроков ────────────────────────────────────────────────────────────────
+// Перечитывать базу целиком дорого: девяносто уроков прозой - это токены на каждый заход
+// и время владельца на каждое объяснение. Граф снимает обе платы: по нему ходят обходом,
+// без модели и без денег. Формат - тот же, что у Graphify (nodes/links), чтобы по графу
+// умели ходить готовые инструменты, а не только Койз.
+//
+// Строится ВСЕГДА при записи, а не по памяти агента: правило, которое надо не забыть,
+// исполняется вероятностно, а граф, собранный после каждой правки, свеж по построению.
+const GRAPH_DIR = process.env.KOIZ_GRAPH || path.join(path.dirname(DB), 'graphify-out')
+
+export function buildGraph(db = DB) {
+  const st = state(db)
+  const nodes = [], links = []
+  const seen = new Set()
+  const node = (id, label, kind, extra = {}) => {
+    if (seen.has(id)) return id
+    seen.add(id)
+    nodes.push({ id, label, file_type: kind, source_file: path.basename(db), source_location: `L${nodes.length + 1}`, kind, ...extra })
+    return id
+  }
+  const edge = (from, to, context) => { if (from && to) links.push({ source: from, target: to, context }) }
+
+  for (const l of [...active(st), ...activeRules(st)]) {
+    const isRule = l.op === 'rule'
+    node(l.id, `${isRule ? 'правило' : 'урок'}: ${l.class}`, isRule ? 'rule' : 'lesson', {
+      project: l.project, pin: l.pin, occ: occ(l), what: (l.what || l.text || '').slice(0, 200),
+      why: l.why || null, fix: l.fix || null, at: l.at,
+    })
+    edge(l.id, node(`class:${l.class}`, l.class, 'class'), 'класс ошибки')
+    edge(l.id, node(`project:${l.project || 'разное'}`, l.project || 'разное', 'project'), 'проект')
+    edge(l.id, node(`pin:${l.pin}`, `закреплено: ${l.pin}`, 'pin'), l.pin === 'ничем' ? 'не закреплено' : 'закреплено')
+    if (l.pin_ref) edge(l.id, node(`mech:${l.pin_ref}`, l.pin_ref, 'mechanism'), 'механизм')
+    for (const to of l.links || []) if (st.L.has(to) && !st.L.get(to).closed) edge(l.id, to, 'сосед')
+    for (const from of l.from || []) edge(l.id, from, 'схлопнут из')
+  }
+  return { directed: true, multigraph: false, graph: { name: 'koiz-lessons', built_at: now() }, nodes, links }
+}
+
+export function writeGraph({ db = DB, dir = GRAPH_DIR } = {}) {
+  const g = buildGraph(db)
+  mkdirSync(dir, { recursive: true })
+  writeFileSync(path.join(dir, 'graph.json'), JSON.stringify(g, null, 2) + '\n')
+  const byKind = g.nodes.reduce((a, n) => { a[n.kind] = (a[n.kind] || 0) + 1; return a }, {})
+  const debtList = debts({ db })
+  writeFileSync(path.join(dir, 'GRAPH_REPORT.md'), `# Граф уроков Койза
+
+Собран ${today()}. Ходить по нему бесплатно: узлы и рёбра, ни одной модели.
+
+- узлов: ${g.nodes.length} (${Object.entries(byKind).map(([k, v]) => `${k}: ${v}`).join(' · ')})
+- рёбер: ${g.links.length}
+- долгов: ${debtList.length}${debtList.length ? ` (${debtList.map(d => d.class).join(', ')})` : ''}
+
+## Как читать
+
+Узел урока связан со своим классом ошибки, проектом и закреплением. Правило связано с
+теми уроками, из которых схлопнуто. Соседство ставится на записи, а не задним числом.
+
+Чтобы перечитать всё про один класс, идут от узла \`class:<имя>\`, а не по всей базе.
+`)
+  return { dir, nodes: g.nodes.length, links: g.links.length }
+}
+
+// ── Подсказка в момент действия ─────────────────────────────────────────────────
+// Урок, всплывающий на разборе сессии, опаздывает: беда уже случилась. Урок обязан всплывать
+// ПЕРЕД действием того же класса - когда агент печатает ту самую команду. Отсюда guard:
+// дешёвый запрос по тексту команды или пути, который либо молчит, либо кладёт в контекст
+// одну-две записи с починкой.
+//
+// Порог не косметика. Слишком низкий - шум на каждой команде, и подсказку перестают читать;
+// слишком высокий - молчание там, где урок был. 0.5 выбран замером на живой базе: ниже него
+// в выдачу лезут записи, связанные с запросом одним общим словом.
+const GUARD_SCORE = Number(process.env.KOIZ_GUARD_SCORE || 0.5)
+
+// Имя программы - самый честный признак родства команды с уроком: «cat > …» и урок про `cat`
+// связаны сильнее, чем любые общие слова в прозе. Поэтому совпадение первого слова весит
+// отдельно, а не растворяется в мере похожести текстов.
+const programOf = t => (String(t || '').trim().match(/^[\w./-]+/) || [''])[0].split('/').pop()
+
+// У командных обёрток первое слово ничего не различает: `git` стоит в половине уроков, и по
+// нему подсказка выдаёт случайное. Для таких берём два слова - «git add» против «git grep».
+const COMMON_TOOLS = new Set(['git', 'node', 'npm', 'npx', 'bun', 'yarn', 'pnpm', 'python3', 'python', 'sh', 'bash', 'sudo', 'docker', 'brew'])
+const signatureOf = text => {
+  const parts = String(text || '').trim().split(/\s+/)
+  const program = programOf(parts[0])
+  if (!COMMON_TOOLS.has(program)) return program
+  const second = (parts[1] || '').replace(/^-+/, '')
+  return second ? `${program} ${second}` : program
+}
+
+export function guard(text, { db = DB, limit = 2, min = GUARD_SCORE } = {}) {
+  const q = String(text || '').trim()
+  if (q.length < 8) return []
+  const program = signatureOf(q)
+  return ask(q.slice(0, 400), { db, limit: limit * 4 })
+    .map(x => {
+      // Имя программы ищем и в воспроизведении, и в тексте урока: у перенесённых из старого
+      // лога записей поля `repro` нет вовсе, а сама команда в тексте названа - «`cat >` пошёл
+      // по симлинку». Терять их значит молчать ровно там, где урок и написан.
+      const inRepro = program && signatureOf(x.repro) === program
+      const inText = program && program.length >= 2
+        && new RegExp(`(^|[^\\w])${program.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^\\w]|$)`)
+          .test(`${x.what} ${x.why || ''} ${x.fix || ''}`)
+      return { ...x, score: +(x.score + (inRepro ? 0.4 : (inText ? 0.3 : 0))).toFixed(3) }
+    })
+    .filter(x => x.score >= min && (x.fix || x.why))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+}
+
+export const guardText = (text, opts = {}) => guard(text, opts).map(x =>
+  `· ${x.class} (${x.occ}×, закреплено: ${x.pin}): ${x.what}\n  починка: ${x.fix || x.why}`).join('\n')
+
 // ── Ворота ─────────────────────────────────────────────────────────────────────
 // Койз вызывается из helioz-start.sh как остальные ворота: класс ошибки, который уже
 // случался и не закреплен ничем, обязан уметь красить ночь. Иначе урок снова текст.
@@ -649,16 +801,63 @@ function selftest() {
   // Пути в фикстурах намеренно с тильдой: этот файл уезжает в публичное дерево, а
   // абсолютный путь вида /Users/<имя> в отслеживаемом файле - жёсткий блокер ворот
   // выпуска. Проверке форма пути безразлична, воротам - нет.
-  const guard = [
+  // Имя переменной не `guard`: так фикстура затеняла одноимённый прибор подсказки, и его
+  // собственные проверки падали на «guard is not a function» - тень вместо беды.
+  const guardNoise = [
     JSON.stringify({ type: 'assistant', message: { content: [{ type: 'tool_use', id: 'g1', name: 'Bash', input: { command: 'rm -rf /' } }] } }),
     JSON.stringify({ type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: 'g1', is_error: true, content: 'PreToolUse:Bash hook error: [bash "~/.claude/hooks/bash-guard.sh"]: [bash-guard] BLOCKED опасная команда' }] } }),
     JSON.stringify({ type: 'user', toolUseResult: { stdout: 'ВЕРДИКТ: красный', stderr: '' } }),
     JSON.stringify({ type: 'assistant', message: { content: [{ type: 'tool_use', id: 'g2', name: 'Bash', input: { command: 'npx playwright test' } }] } }),
     JSON.stringify({ type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: 'g2', is_error: true, content: 'Error: Browser "chrome-for-testing" is not installed; expected executable at ~/Library/Caches' }] } }),
   ].join('\n')
-  const g = captureTranscript(guard, { session: 'g', project: 'p' })
+  const g = captureTranscript(guardNoise, { session: 'g', project: 'p' })
   ok(g.length === 1, `сторож и пустой вердикт не идут в базу, настоящая беда идёт (снято ${g.length})`)
   ok(/chrome-for-testing/.test(g[0].what), 'снята именно настоящая беда')
+
+  // 12б. Подсказка в момент действия: молчит на пустом и на чужом, говорит на своём и
+  // никогда не выдаёт закрытое датой - иначе агента останавливает то, что уже не действует.
+  const dbq = path.join(tmp, 'guard.jsonl')
+  const q1 = addLesson({ what: 'запись через cat пошла по симлинку и переписала лаунчер', class: 'symlink-write',
+    why: 'перенаправление не проверялось', fix: 'проверять test -L перед записью в bin',
+    repro: 'cat > /usr/local/bin/tool', project: 'a' }, dbq)
+  ok(guard('cat > /opt/homebrew/bin/maestro', { db: dbq }).length === 1, 'урок всплывает на команде своего класса')
+  ok(guard('ls', { db: dbq }).length === 0, 'на короткой команде guard молчит')
+  ok(guard('npm run build --workspace web', { db: dbq }).length === 0, 'на чужой команде guard молчит')
+  ok(/починка: проверять test -L/.test(guardText('cat > /usr/local/bin/tool', { db: dbq })), 'подсказка несёт починку, а не только беду')
+  // У обёрток вроде git первое слово не различает ничего: «git add» и «git grep» - разные беды.
+  addLesson({ what: 'широкий git add затащил в дерево чужой файл', class: 'add-all',
+    why: 'выборочность потерялась', fix: 'коммитить явными путями', repro: 'git add -A', project: 'b' }, dbq)
+  addLesson({ what: 'отсутствие доказывали обёрнутым grep', class: 'grep-absence',
+    why: 'exit 1 читается как «чисто»', fix: 'git grep или rg -a', repro: 'git grep -n нечто', project: 'c' }, dbq)
+  const wide = guard('git add -A && git commit -m fix', { db: dbq })
+  ok(wide.length === 1 && wide[0].class === 'add-all', `две буквы «git» не путают беды (пришло ${wide.map(x => x.class).join(', ')})`)
+  ok(guard('git grep -n токен', { db: dbq })[0]?.class === 'grep-absence', 'соседняя подкоманда находит свой урок')
+    closeLesson(q1.id, 'проверка: закрытое не подсказывается', dbq)
+  ok(guard('cat > /opt/homebrew/bin/maestro', { db: dbq }).length === 0, 'закрытый датой урок в подсказке не всплывает')
+
+  // 13. Граф уроков: собирается по журналу, покрывает КАЖДЫЙ активный урок и не тащит
+  // закрытые. Граф, который забыл урок, врёт полнотой ровно там, где по нему пойдут.
+  const dbg = path.join(tmp, 'graph.jsonl')
+  const g1 = addLesson({ what: 'первый урок для графа про ворота', class: 'ворота', project: 'a' }, dbg)
+  const g2 = addLesson({ what: 'второй урок для графа про съём', class: 'съём', project: 'b', pin: 'тест', pin_ref: dbg }, dbg)
+  const gdir = path.join(tmp, 'graphout')
+  const written = writeGraph({ db: dbg, dir: gdir })
+  const graph = JSON.parse(readFileSync(path.join(gdir, 'graph.json'), 'utf8'))
+  const lessons = graph.nodes.filter(n => n.kind === 'lesson').map(n => n.id)
+  ok(lessons.length === 2 && lessons.includes(g1.id) && lessons.includes(g2.id), `граф несёт оба урока (несёт ${lessons.length})`)
+  ok(graph.nodes.some(n => n.kind === 'class' && n.label === 'ворота'), 'класс ошибки стал узлом')
+  ok(graph.nodes.some(n => n.kind === 'project' && n.label === 'b'), 'проект стал узлом')
+  ok(graph.nodes.some(n => n.kind === 'mechanism'), 'механизм закрепления стал узлом')
+  ok(graph.links.some(l => l.source === g2.id && l.context === 'закреплено'), 'закреплённый урок связан со своим закреплением')
+  ok(graph.links.some(l => l.source === g1.id && l.context === 'не закреплено'), 'незакреплённый урок виден по ребру')
+  ok(existsSync(path.join(gdir, 'GRAPH_REPORT.md')), 'сводка графа записана')
+  ok(written.nodes === graph.nodes.length, 'отчёт о сборке не расходится с графом')
+  // Закрытое из графа уходит: иначе обход выдаёт то, что больше не действует.
+  closeLesson(g1.id, 'проверка двувременности в графе', dbg)
+  writeGraph({ db: dbg, dir: gdir })
+  const after = JSON.parse(readFileSync(path.join(gdir, 'graph.json'), 'utf8'))
+  ok(!after.nodes.some(n => n.id === g1.id), 'закрытый датой урок из графа ушёл')
+  ok(after.nodes.some(n => n.id === g2.id), 'живой урок в графе остался')
 
   // 12. Миграция: ни одна запись старого лога не теряется, и это проверено, не обещано.
   const md = path.join(tmp, 'old.md')
@@ -688,7 +887,7 @@ function selftest() {
 
   rmSync(tmp, { recursive: true, force: true })
   console.log('selftest ok - ADD-only, повтор как hit, кросс-проектность, двувременность, схлопывание в правило,')
-  console.log('             бюджет, долг и ворота, закрепление с механизмом, фильтр секретов, связи, идемпотентный съем, миграция без потерь')
+  console.log('             бюджет, долг и ворота, закрепление с механизмом, фильтр секретов, связи, идемпотентный съем, миграция без потерь, граф уроков')
   return 0
 }
 
@@ -706,15 +905,23 @@ const HELP = `Койз - дознаватель роя. База уроков в
             [--pin hook|deny|прибор|тест|ничем] [--pin-ref <путь>] [--repro "…"]
   capture   --transcript <путь.jsonl> [--project …]   съем машиной с сессии
   ask       "<запрос>" [--class …] [--project …] [--limit N]
+  pin       --id <ID> --pin <тип> --pin-ref <путь>      закрепить записанный урок
+  next      [--limit N]                                 что закреплять в первую очередь
   close     --id <ID> --why "…"                        закрыть датой (не стереть)
   ack       --id <ID> [--until ГГГГ-ММ-ДД] --why "…"   отсрочить долг с датой
   collapse  [--dry]                                     схлопывание отдельным проходом
   debt                                                  что повторилось и не закреплено
   gate      [--class …]                                 ворота: красит ночь Гелиоза
+  guard     --text "<команда или путь>"                 уроки этого класса ПЕРЕД действием
+  graph     [--dir …]                                   граф уроков для обхода без модели
   stats · history --id <ID> · export [--dir …] · migrate --file <lessons.md>
   --selftest [--json]
 
   Журнал: ${DB}   Бюджет: ${BUDGET} активных   Vault: ${VAULT}`
+
+// Команды, которые пишут. После каждой граф пересобирается: правило «не забыть собрать
+// граф» текстом исполняется вероятностно, а собранный после записи граф свеж по построению.
+const WRITING = new Set(['add', 'capture', 'migrate', 'collapse', 'close', 'ack', 'pin'])
 
 function main() {
   const cmd = args.find(a => !a.startsWith('--')) || (has('--selftest') ? '--selftest' : 'help')
@@ -754,6 +961,22 @@ function main() {
         return 0
       }
       case 'close': return out(closeLesson(argOf('--id'), argOf('--why')))
+      case 'pin': {
+        const r = pinLesson(argOf('--id'), argOf('--pin'), argOf('--pin-ref'))
+        return asJson ? out(r) : (console.log(`${r.id}: закрепление ${r.from} → ${r.pin}`), 0)
+      }
+      case 'next': {
+        const r = nextToPin({ limit: Number(argOf('--limit') || 5) })
+        if (asJson) return out(r)
+        if (!r.length) { console.log('незакреплённых уроков с дознанной причиной нет'); return 0 }
+        console.log(`закрепить в первую очередь (${r.length}):`)
+        for (const x of r) {
+          console.log(`  ${x.id} · ${x.class} · ${x.occ}× · предлагаю: ${x.suggest}`)
+          console.log(`    ${x.what}`)
+          if (x.fix) console.log(`    починка: ${x.fix}`)
+        }
+        return 0
+      }
       case 'ack': return out(ackDebt(argOf('--id'), argOf('--until'), argOf('--why')))
       case 'collapse': {
         const r = collapse({ apply: !has('--dry') })
@@ -795,6 +1018,17 @@ function main() {
         console.log('не потеряно ни одной записи (сверка по src каждой)')
         return 0
       }
+      case 'guard': {
+        const text = argOf('--text') || args.find(a => !a.startsWith('--') && a !== 'guard') || ''
+        const hits = guard(text)
+        if (asJson) return out(hits)
+        if (hits.length) console.log(guardText(text))
+        return 0
+      }
+      case 'graph': {
+        const r = writeGraph({ dir: argOf('--dir') || GRAPH_DIR })
+        return asJson ? out(r) : (console.log(`граф уроков: ${r.nodes} узлов, ${r.links} рёбер в ${r.dir}`), 0)
+      }
       case '--selftest': return selftest()
       default: console.log(HELP); return 0
     }
@@ -812,4 +1046,12 @@ const runAsTool = () => {
   try { return realpathSync(fileURLToPath(import.meta.url)) === realpathSync(process.argv[1] || '') }
   catch { return false }
 }
-if (runAsTool()) process.exit(main())
+if (runAsTool()) {
+  const code = main()
+  // Граф пересобирается ПОСЛЕ записи и не может её сорвать: беда графа не отменяет
+  // записанный урок, поэтому она печатается предупреждением, а не роняет команду.
+  if (WRITING.has(args.find(a => !a.startsWith('--')) || '')) {
+    try { writeGraph({}) } catch (e) { console.error(`койз: граф не пересобран — ${e.message}`) }
+  }
+  process.exit(code)
+}

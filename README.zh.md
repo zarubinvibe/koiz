@@ -77,6 +77,8 @@ Koiz 是你所有项目共用的一份教训库。一份日志，一个检索口
 
 守卫正常工作 不算失败。已经拦住的阻断，以及短于三个实义词的证据，都不会进库。否则欠账会无缘无故把闸门染红。
 
+<p align="center"><img src="docs/assets/pantheon/stage-capture.png" alt="大理石桌上放着一摞薄薄的大理石片，蓝色路径从画面左边一直连到桌前" width="100%"></p>
+
 **你会得到：** 一批草稿教训，全程没有手打一行。
 
 ### 第 2 步：追出原因
@@ -84,6 +86,8 @@ Koiz 是你所有项目共用的一份教训库。一份日志，一个检索口
 采集来的草稿里，「为什么」是空的。原因没查出来，这条教训就没做完，也不会作为成品被检索到。
 
 顺序很重要，反过来不成立。事实由机器取，意义由人或智能体补。让智能体去猜事实，写出来的是很像样的假话。
+
+<p align="center"><img src="docs/assets/pantheon/stage-cause.png" alt="科俄斯举着轴杖，低头看着摊在自己掌上的那本大理石册页" width="100%"></p>
 
 **你会得到：** 一条带原因的教训，而不是一句症状描述。
 
@@ -93,6 +97,8 @@ Koiz 是你所有项目共用的一份教训库。一份日志，一个检索口
 
 「没有」是合法值，也是诚实的承认。它说明机制还不存在，而正是它，之后会把这条教训抬成一笔欠账。
 
+<p align="center"><img src="docs/assets/pantheon/stage-pin.png" alt="一根金色别针笔直穿过摊开的大理石册页，针头立在纸面之上" width="100%"></p>
+
 **你会得到：** 一条能看清楚是什么在拦住重复的记录。
 
 ### 第 4 步：归并成规则
@@ -101,6 +107,8 @@ Koiz 是你所有项目共用的一份教训库。一份日志，一个检索口
 
 过期的教训不会被删掉。它按日期关闭，留在历史里。它不是假话，只是不再生效了。
 
+<p align="center"><img src="docs/assets/pantheon/stage-collapse.png" alt="三片薄薄的大理石片在大理石桌上汇成一片更厚的石片" width="100%"></p>
+
 **你会得到：** 三条记录变成一条规则，库也不会无止境地长下去。
 
 ### 第 5 步：闸门拦住工作
@@ -108,6 +116,8 @@ Koiz 是你所有项目共用的一份教训库。一份日志，一个检索口
 `gate` 命令在教训回来、而固定栏还写着「没有」时，以非零码退出。在作者那边，这条命令挂在夜间流程上，已经真的把夜里的活儿拦下来过。
 
 出路有两条，都很诚实：用机制关掉它，或者承认这条规则不成立，按日期关掉。要延期就得写上日期和理由。
+
+<p align="center"><img src="docs/assets/pantheon/stage-gate.png" alt="一块竖立的大理石板，中间开着一个干净的长方形通孔，立在大理石桌上" width="100%"></p>
 
 **你会得到：** 一次没法默默绕过去的重复。
 
@@ -215,7 +225,7 @@ code .          # VS Code: агент открывается внутри ред
 | 项目 | Zeuz | 工作流工厂：把一个想法变成带规则、闸门、可观测性和回放的多智能体系统。 | [仓库](https://github.com/zarubinvibe/zeuz) · [ZIP](https://github.com/zarubinvibe/zeuz/archive/refs/heads/main.zip) |
 | 项目 | Lynceuz | 以零成本收集公开网页证据；安全路径走完时，它会给出诚实的理由并停下。 | [仓库](https://github.com/zarubinvibe/lynceuz) · [ZIP](https://github.com/zarubinvibe/lynceuz/archive/refs/heads/main.zip) |
 | 项目 | Iriz | macOS 菜单栏听写：语音在你自己的 Mac 上解码，键盘布局自动纠正，口述可以直接变成给智能体的任务。 | [仓库](https://github.com/zarubinvibe/iriz) · [ZIP](https://github.com/zarubinvibe/iriz/archive/refs/heads/main.zip) |
-| 项目 | Mantoz | 在真人看到之前，先让上千个生成的人物走一遍产品，并给出每个群体的回答分布。 | [仓库](https://github.com/zarubinvibe/mantoz) · [ZIP](https://github.com/zarubinvibe/mantoz/archive/refs/heads/main.zip) |
+| 项目 | Mantoz | 把一个想法摆到五百个并不存在的人面前，然后告诉你每个群体是怎么答的。 | [仓库](https://github.com/zarubinvibe/mantoz) · [ZIP](https://github.com/zarubinvibe/mantoz/archive/refs/heads/main.zip) |
 | 项目 | Koiz | 所有项目共用一份教训库。每次失败都追到原因，原因不被钩子、闸门或测试关掉，就一直挂在那里。 | [仓库](https://github.com/zarubinvibe/koiz) · [ZIP](https://github.com/zarubinvibe/koiz/archive/refs/heads/main.zip) |
 <!-- pantheon-family:end -->
 
