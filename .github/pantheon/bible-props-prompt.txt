@@ -1,0 +1,19 @@
+Use case: stylized-concept
+Asset type: prop reference sheet for a project of the Olympuz family, binding for every later frame
+Primary request: one wide sheet that fixes the objects of this project once and for all, so each one can be reproduced identically in every later scene.
+Input images: Image 1 is the immutable Pantheon style reference; Image 2 is the required family-signature column.
+Subject: six objects laid out on a plain ivory surface, each shown alone, each large enough to read: (1) the axis rod, a slender straight muted-gold rod as long as a forearm with one plain smooth marble ring encircling it near the top; (2) the open marble ledger, a thick white-marble book lying open, each of its two pages carrying exactly THREE carved horizontal grooves; (3) the gold pin alone, one straight muted-gold pin with a plain flat round head and a simple point, lying on its side; (4) the stack of journal leaves, eight identical thin white-marble sheets stacked flat and squarely on top of each other, the stack no taller than a hand; (5) the gate plate, a small upright white-marble slab standing on its own foot with one clean rectangular opening cut all the way through it; (6) the marble table, a low rectangular white-marble table with four square legs and a plain thick top, the same table that stands in every later scene of this project.
+Composition/framing: 16:9 landscape. A classical white-marble column stands at the far right as the family signature, clearly separated from the objects. The six objects sit in two rows of three with equal spacing, each fully inside the frame, nothing overlapping, nothing cropped. Generous empty ivory space between them.
+Style/medium: premium restrained 3D marble and gold render, physically plausible materials, warm ivory Apple-like presentation, museum plate feeling
+Lighting/mood: soft daylight from upper left, long gentle shadows, identical lighting on every object. Gold surfaces glow softly FROM WITHIN, never lit by a lamp, a neon tube or a hard rim light.
+Color palette: ivory #F3EFE8, bright ivory #FBFAF6, white marble, muted gold #C9A87A for the axis rod and the pin only, sky blue #B8D6EA used nowhere on this sheet, charcoal #3E3A36
+Constraints:
+- Every object rests on the surface and casts a shadow. Nothing hovers, nothing balances on a point.
+- The axis rod is straight and unadorned: NO snakes, NO wings, NO letters, NO engraving, NO sun disc. Its ring is a plain smooth hoop that sits loose around the rod.
+- Each page of the ledger carries exactly THREE grooves and no writing of any kind.
+- The gate plate opening is a clean rectangle cut through the whole thickness of the slab, so the ivory background is visible through it.
+- The stack of leaves is square and even: every sheet the same size, edges aligned, none sliding out.
+- These are the SAME objects that the character sheet shows in his hands: same proportions, same materials, same details.
+- Preserve the reference style; highest final quality; maximum resolution.
+Avoid: rainbow of many colors, prismatic colors, books with paper pages, scrolls, keyboards, microphones, phones, laptops, screens, cables, modern devices, brand marks, hearth, fire, flame, scales, sword, owl, dark background, black background, neon, purple gradient, smoky cinema lighting, heavy bronze, metallic or plastic marble, watermark, callout labels
+Text (verbatim): No readable text, no letters, no digits, no measurement marks, no callout labels anywhere in the image.

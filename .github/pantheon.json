@@ -1,0 +1,180 @@
+{
+  "schema_version": 3,
+  "family_id": "zarubinvibe-pantheon",
+  "catalog_version": "2026-09-06",
+  "dress": "full",
+  "project": {
+    "slug": "koiz",
+    "deity": "Koios",
+    "symbol": "the axis rod and a gold pin driven through the ledger of lessons"
+  },
+  "visuals": {
+    "style_anchor_sha256": "ce524f9d22cb0092cb17aa280832e1b2ab2a77a0e01602065ec502232a3bb2d2",
+    "column_reference_sha256": "9d32edd56ac55c4dd6d0425a28a2ac35035e9ab09073fc8ce0c1414b2edfb1bd",
+    "presentation": {
+      "min_width": 1600,
+      "aspect_ratio": "16:9",
+      "readme_width": "100%",
+      "published_width": 1672,
+      "published_height": 941
+    },
+    "bible": {
+      "character_sheet": {
+        "published_path": "docs/assets/pantheon/bible-character.png",
+        "published_sha256": "0f6940ad424dbb14ca16bcdfb0c5ee8e4d9dede0cca3c2db9062e9eed6076b58",
+        "alt": "Карта персонажа: Койз из белого мрамора в четырех видах со стержнем оси, раскрытым сводом уроков и золотой шпилькой, рядом этюды предметов"
+      },
+      "prop_sheet": {
+        "published_path": "docs/assets/pantheon/bible-props.png",
+        "published_sha256": "baccce7b4bcd1b9b1a92a96ca18248ac98057fafa9f031927382fc7a72b864d7",
+        "alt": "Карта реквизита: стержень оси с кольцом, раскрытый свод с бороздами, золотая шпилька, стопка мраморных листов, плита с проемом и мраморный стол на слоновой кости"
+      }
+    },
+    "hero": {
+      "source_path": "docs/assets/pantheon/hero-source.png",
+      "source_sha256": "50173c9ed752959fa39110f5ba66fe8a723506b1fc6bb05a72e0bdda972d19b1",
+      "published_path": "docs/assets/pantheon/hero.png",
+      "published_sha256": "50173c9ed752959fa39110f5ba66fe8a723506b1fc6bb05a72e0bdda972d19b1"
+    },
+    "emblem": {
+      "source_path": "docs/assets/pantheon/emblem-source.png",
+      "source_sha256": "927fa0b130eb3b8eaf7baae5ea4577954e78f0797f39720616674f2af3f635f2",
+      "published_path": "docs/assets/pantheon/emblem.png",
+      "published_sha256": "927fa0b130eb3b8eaf7baae5ea4577954e78f0797f39720616674f2af3f635f2"
+    },
+    "takt": {
+      "source_path": "docs/assets/pantheon/takt.png",
+      "source_sha256": "10322e47bb1b02f40847613fd7ec9677ae9c1a12004061eb17351c9cb077525e",
+      "plate_geometry": ".github/pantheon/takt-plity.json",
+      "languages": {
+        "en": {
+          "published_path": "docs/assets/pantheon/takt-en.png",
+          "published_sha256": "70d8d81e3281f7074135d30ea2e33a93d7fcaa7818cf77f6a52f9d2e56873350",
+          "alt": "Five marble plates in a row, each carved with one stage of the work, linked by a gold thread that comes in from the left edge"
+        },
+        "ru": {
+          "published_path": "docs/assets/pantheon/takt-ru.png",
+          "published_sha256": "e419068a41ab50f6a0ee83b94901b61bf0d5d7f73d8b08a0fabc30527e1f757a",
+          "alt": "Пять мраморных плит в ряд, на каждой высечена одна стадия работы, их связывает золотая нить, приходящая от левой кромки"
+        },
+        "zh": {
+          "published_path": "docs/assets/pantheon/takt-zh.png",
+          "published_sha256": "ab9282925436eb422ca4d2edbd157c7bec4f5431c76adcf981ff3947168a5493",
+          "alt": "五块大理石板排成一行，每块刻着一个阶段，一条从左边进来的金色丝线把它们串起来"
+        }
+      }
+    },
+    "stages": [
+      {
+        "id": "capture",
+        "title_en": "Capture the failure",
+        "title_ru": "Съем провала",
+        "title_zh": "采集失败",
+        "diagram_en": "Capture",
+        "diagram_ru": "Съем",
+        "diagram_zh": "采集"
+      },
+      {
+        "id": "cause",
+        "title_en": "Find the cause",
+        "title_ru": "Дознание причины",
+        "title_zh": "追出原因",
+        "diagram_en": "Cause",
+        "diagram_ru": "Причина",
+        "diagram_zh": "追因"
+      },
+      {
+        "id": "pin",
+        "title_en": "Pin it to a mechanism",
+        "title_ru": "Закрепление механизмом",
+        "title_zh": "固定到机制",
+        "diagram_en": "Pin",
+        "diagram_ru": "Закрепление",
+        "diagram_zh": "固定"
+      },
+      {
+        "id": "collapse",
+        "title_en": "Collapse into a rule",
+        "title_ru": "Схлопывание в правило",
+        "title_zh": "归并成规则",
+        "diagram_en": "Collapse",
+        "diagram_ru": "Схлопывание",
+        "diagram_zh": "归并"
+      },
+      {
+        "id": "gate",
+        "title_en": "The gate holds the work",
+        "title_ru": "Ворота держат работу",
+        "title_zh": "闸门拦住工作",
+        "diagram_en": "Gate",
+        "diagram_ru": "Ворота",
+        "diagram_zh": "闸门"
+      }
+    ],
+    "doc_frames": {
+      "security": {
+        "published_path": "docs/assets/pantheon/doc-security.png",
+        "published_sha256": "d2a886eafa13fa0a50f50c044c8d19c55609ed65a3777065abffe678bf590785",
+        "alt": "Мраморная плита с прорезанным насквозь прямоугольным проемом стоит между приходящими голубыми путями и стопкой мраморных листов на столе",
+        "pages": {
+          "en": "SECURITY.md",
+          "ru": "SECURITY.ru.md",
+          "zh": "SECURITY.zh.md"
+        }
+      },
+      "contributing": {
+        "published_path": "docs/assets/pantheon/doc-contributing.png",
+        "published_sha256": "9450ab602f1193b693f29382b2c3206a4d5fbc761859f6a7be790e9078a7051d",
+        "alt": "Золотая шпилька стоит торчком сквозь страницу раскрытого мраморного свода рядом со стопкой тонких мраморных листов на мраморном столе",
+        "pages": {
+          "en": "CONTRIBUTING.md",
+          "ru": "CONTRIBUTING.ru.md",
+          "zh": "CONTRIBUTING.zh.md"
+        }
+      }
+    },
+    "doc_pages": [
+      {
+        "path": "docs/ONBOARDING.md",
+        "frames": [
+          "assets/pantheon/doc-onboarding.png"
+        ]
+      },
+      {
+        "path": "docs/ONBOARDING.ru.md",
+        "frames": [
+          "assets/pantheon/doc-onboarding.png"
+        ]
+      },
+      {
+        "path": "docs/ONBOARDING.zh.md",
+        "frames": [
+          "assets/pantheon/doc-onboarding.png"
+        ]
+      },
+      {
+        "path": "docs/HOW-IT-WORKS.md",
+        "frames": [
+          "assets/pantheon/doc-how-it-works.png"
+        ]
+      },
+      {
+        "path": "docs/HOW-IT-WORKS.ru.md",
+        "frames": [
+          "assets/pantheon/doc-how-it-works.png"
+        ]
+      },
+      {
+        "path": "docs/HOW-IT-WORKS.zh.md",
+        "frames": [
+          "assets/pantheon/doc-how-it-works.png"
+        ]
+      }
+    ]
+  },
+  "receipts": {
+    "generation_path": ".github/pantheon/generation-receipt.json",
+    "visual_judge_path": ".github/pantheon/visual-judge-receipt.json",
+    "prompt_path": ".github/pantheon/hero-source-prompt.txt"
+  }
+}

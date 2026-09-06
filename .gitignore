@@ -1,0 +1,8 @@
+node_modules/
+graphify-out/
+.scratch/
+
+# Логи генерации кадров и наложение рамок - рабочие следы, а не витрина.
+# Лог несёт абсолютные пути машины и в публичном дереве краснит ворота.
+docs/assets/pantheon/*.log
+docs/assets/pantheon/takt-nalozhenie.png

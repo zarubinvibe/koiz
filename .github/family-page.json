@@ -1,0 +1,491 @@
+{
+  "schema_version": 1,
+  "owner": "zarubinvibe",
+  "slug": "koiz",
+  "license_badge": "MIT",
+  "status_badge": "in%20use",
+  "languages": [
+    "en",
+    "ru",
+    "zh"
+  ],
+  "quick_code": "git clone https://github.com/zarubinvibe/koiz.git\ncd koiz\nbash install.sh\n\n# без git, одним архивом:\ncurl -L https://github.com/zarubinvibe/koiz/archive/refs/heads/main.zip -o koiz.zip\n\n# дальше открывайте, чем привычнее:\nclaude          # Claude Code: скажите /koiz-setup, установка пройдет разговором\ncodex           # Codex CLI: правила проекта уже лежат в AGENTS.md\ncode .          # VS Code: агент открывается внутри редактора\n",
+  "owner_display_name": {
+    "en": "Filipp Zarubin",
+    "ru": "Филипп Зарубин",
+    "zh": "Filipp Zarubin"
+  },
+  "text": {
+    "en": {
+      "title": "Koiz",
+      "name": "Koiz",
+      "tagline": "Koiz keeps one lesson base for every project, and the work stops while the cause of a failure has no mechanism closing it.",
+      "hero_alt": "White marble Koios beside a classical column, the axis rod upright in his right hand and a gold pin driven through the open marble ledger on his palm, blue paths converging at his feet in daylight",
+      "welcome": "Hi. I am Fil.\n\nI built Koiz after stepping on the same rake in a third project in a row. The lesson had been written down. It sat in another repository, in another log, and nobody read it in time.\n\nTry it. If it breaks, write in Issues, I read them. If it helps, leave a star and show it to somebody who runs several projects at once. The rest of the Olympuz projects live here: https://zarubinvibe.com",
+      "what": "Koiz is a shared lesson base for all of your projects. One journal, one search key, one discipline.\n\nA lesson arrives as a breakdown, not as a retelling: what broke, how to reproduce it, why it happened, and what closes it. That last field carries the weight. While it says \"nothing\", the lesson is unfinished.",
+      "why": "A mistake is rarely new. It already happened, in another project, six months ago, and the conclusion was written down then. The note sits in that project's log while your hands are in a different repository today, and nobody remembers the note exists.\n\nThen it gets worse. Lessons pile up, duplicates never merge, stale ones are never marked. In a year that is a wall of text nobody reads, which means it is not there at all.",
+      "advantage": "a lesson is closed by a mechanism, not by good intentions.",
+      "better": "A rule written in prose gets read, agreed with, and quietly ignored. A mechanism gives no advice: a hook, a deny rule, an instrument or a test simply refuses to let the thing happen twice. Koiz demands the name of that mechanism when the lesson is written, and turns the gate red when an unpinned lesson shows up a second time.",
+      "how": "The work runs in stages. The machine takes what the disk can prove, the agent adds only meaning, and pinning is checked apart from writing.",
+      "quick_intro": "You need Git, Node 20 or newer, and any one of three ways in: Claude Code, Codex CLI, or a plain terminal.",
+      "quick_extra": "The three lines above are the whole install. `bash install.sh` creates the base and puts capture on session close, asking before every step. It needs no agent: a terminal is enough.\n\n**Claude Code.** Run `claude` in this folder and say `/koiz-setup`. The install goes as a conversation, one question at a time.\n\n**Codex CLI.** Run `codex` in the same place. The project rules already sit in `AGENTS.md`.\n\n**No agent at all.** `node scripts/koiz.mjs ask \"what has broken before\"` shows what the base knows about your question and installs nothing.",
+      "quick_result": "the base exists, capture runs on session close, and `node scripts/koiz.mjs debt` shows which lesson came back with nothing holding it.",
+      "compare_header": [
+        "Choice",
+        "What it is",
+        "Where lessons live",
+        "Reaches other projects",
+        "Demands a mechanism",
+        "Stops the work",
+        "Price"
+      ],
+      "compare": [
+        [
+          "**Koiz**",
+          "A lesson base with mandatory pinning",
+          "One journal on your own disk",
+          "Yes, the key is the error class, not the repository name",
+          "Yes, the pin field is required",
+          "Yes, an unpinned repeat turns the gate red",
+          "Own tool, free"
+        ],
+        [
+          "Writing it up by hand",
+          "A note after a bad session",
+          "Wherever you wrote it",
+          "No",
+          "No",
+          "No",
+          "Your hours, every time"
+        ],
+        [
+          "`CLAUDE.md` and `AGENTS.md`",
+          "A rule as prose in the repository",
+          "In the project where it was written",
+          "No, the file lives in one tree",
+          "No",
+          "No",
+          "Free"
+        ],
+        [
+          "Cursor Rules",
+          "Editor rules handed to the agent",
+          "In the project settings",
+          "No",
+          "No",
+          "No",
+          "Part of the subscription"
+        ],
+        [
+          "mem0",
+          "Agent memory for facts and preferences",
+          "Its own store or the cloud",
+          "Yes, if the projects share one memory",
+          "No",
+          "No",
+          "Open source, cloud is paid"
+        ],
+        [
+          "Letta",
+          "An agent with memory and a bounded context block",
+          "Its own database",
+          "Partly",
+          "No",
+          "No",
+          "Open source"
+        ],
+        [
+          "Zep and Graphiti",
+          "A memory graph where facts carry validity intervals",
+          "Its own service",
+          "Yes",
+          "No",
+          "No",
+          "Open source, cloud is paid"
+        ]
+      ],
+      "compare_note": "Names belong to their owners. The table describes purpose, not a benchmark: other products change, and this page does not speak for them.",
+      "glossary": [
+        [
+          "Lesson",
+          "One failure taken apart: the cause and the mechanism that closes the repeat"
+        ],
+        [
+          "Pin",
+          "The named mechanism, a hook, a deny rule, an instrument or a test, that makes the repeat impossible"
+        ],
+        [
+          "Collapse",
+          "A separate pass that merges similar lessons into one rule"
+        ]
+      ],
+      "safety": [
+        "Every lesson stays on your disk, in one file. Nothing leaves the machine: the instrument has no network and no dependencies.",
+        "The secret filter sits on the write, not on the read. Tokens, keys and private keys are cut before the line reaches the journal.",
+        "The base lives outside the project repository. Lessons carry paths and names from other people's work, and a public tree is the wrong place for them.",
+        "The journal only appends. A wrong record is closed by date and stays in history together with the reason it was closed.",
+        "The instrument runs from source with nothing installed: three files on bare Node.",
+        "Capture reads the session transcript on your own machine and copies it nowhere."
+      ],
+      "safety_tail": "What actually lands in the base and where to report a hole: [SECURITY.md](SECURITY.md).",
+      "status": "Status: in use every day. The owner's base holds more than eighty active lessons, and the gate stands in the nightly run, where it has already stopped the night on an unpinned repeat.",
+      "limits": [
+        "A repeat is caught by the fingerprint of machine capture. Two lessons written as prose about the same thing in different words will not be merged.",
+        "The cause is written by a person or an agent. The machine takes only what the disk shows: an exit code, a failed command, a refused gate.",
+        "Collapse proposes a rule and leaves the decision to you: the merge runs as a separate pass and shows exactly what it merges.",
+        "Capture is proven on Claude Code transcripts. Other agent CLIs write their journals differently and need their own reader.",
+        "Windows is not tested yet."
+      ],
+      "docs": "Deeper: [the onboarding](docs/ONBOARDING.md) walks the first run step by step, and [how it works](docs/HOW-IT-WORKS.md) takes every stage apart.",
+      "license": "The project is available under the [MIT License](LICENSE)."
+    },
+    "ru": {
+      "title": "Койз",
+      "name": "Койз",
+      "tagline": "Койз держит одну базу уроков на все проекты, и работа стоит, пока причина провала не закрыта механизмом.",
+      "hero_alt": "Койз из белого мрамора у классической колонны: стержень оси в правой руке, золотая шпилька продета сквозь раскрытый мраморный свод на ладони, голубые пути сходятся к его ногам при дневном свете",
+      "welcome": "Привет. Я Фил.\n\nКойз я собрал после того, как третий проект подряд наступил на те же грабли. Урок был записан. Он лежал в другом репозитории, в другом логе, и вовремя его никто не прочитал.\n\nПопробуйте. Сломается, пишите в Issues: я читаю. Пригодилось, поставьте звезду и покажите тому, кто ведет несколько проектов сразу. Остальные проекты Олимпуса здесь: https://zarubinvibe.ru",
+      "what": "Койз держит общую базу уроков для всех ваших проектов. Один журнал, один ключ поиска, одна дисциплина.\n\nУрок сюда попадает разбором, а не пересказом: что сломалось, чем воспроизводится, почему так вышло и чем закрыто. Последнее поле главное. Пока в нем стоит «ничем», урок не закончен.",
+      "why": "Ошибка редко бывает новой. Она уже случалась в другом проекте полгода назад, и вывод тогда записали. Запись лежит в логе того проекта, а руки сегодня работают в другом, и о существовании записи никто не помнит.\n\nДальше хуже. Уроки копятся, дубли не схлопываются, устаревшее не помечается. Через год это стена текста, которую не читают, а значит ее нет.",
+      "advantage": "урок закрыт механизмом, а не намерением.",
+      "better": "Правило прозой читают, соглашаются и все равно делают иначе. Механизм ничего не советует: хук, запрет, прибор или тест просто не дают случиться этому второй раз. Койз требует назвать механизм при записи и красит ворота, когда незакрепленный урок пришел снова.",
+      "how": "Работа идет стадиями. Машина берет то, что видно с диска, агент дописывает только смысл, а закрепление проверяется отдельно от записи.",
+      "quick_intro": "Нужен Git, Node 20 или новее и любой из трех входов: Claude Code, Codex CLI или обычный терминал.",
+      "quick_extra": "Три строки выше и есть вся установка. `bash install.sh` заводит базу и ставит съем на закрытие сессии, спрашивая разрешение перед каждым шагом. Агент ему не нужен: хватает терминала.\n\n**Claude Code.** Запустите `claude` в этой папке и скажите `/koiz-setup`. Установка пройдет разговором, по одному вопросу.\n\n**Codex CLI.** Запустите `codex` там же. Правила проекта уже лежат в `AGENTS.md`.\n\n**Совсем без агента.** `node scripts/koiz.mjs ask \"что уже ломалось\"` покажет, что база знает по вашему запросу, и ничего не поставит.",
+      "quick_result": "база заведена, съем стоит на закрытии сессии, а `node scripts/koiz.mjs debt` показывает, какой урок вернулся и до сих пор ничем не закреплен.",
+      "compare_header": [
+        "Вариант",
+        "Что это",
+        "Где живут уроки",
+        "Действует на другие проекты",
+        "Требует механизм",
+        "Останавливает работу",
+        "Цена"
+      ],
+      "compare": [
+        [
+          "**Койз**",
+          "База уроков с обязательным закреплением",
+          "Один журнал на вашем диске",
+          "Да, ключом служит класс ошибки, а не имя репозитория",
+          "Да, поле закрепления обязательно",
+          "Да, незакрепленный повтор красит ворота",
+          "Свой инструмент, бесплатно"
+        ],
+        [
+          "Разбор руками в блокноте",
+          "Заметка после неудачной сессии",
+          "Там, где записали",
+          "Нет",
+          "Нет",
+          "Нет",
+          "Ваши часы на каждый разбор"
+        ],
+        [
+          "`CLAUDE.md` и `AGENTS.md`",
+          "Правило прозой в репозитории",
+          "В том проекте, где написано",
+          "Нет, файл живет в одном дереве",
+          "Нет",
+          "Нет",
+          "Бесплатно"
+        ],
+        [
+          "Cursor Rules",
+          "Правила редактора, которые получает агент",
+          "В настройках проекта",
+          "Нет",
+          "Нет",
+          "Нет",
+          "Входит в подписку"
+        ],
+        [
+          "mem0",
+          "Память агента: факты и предпочтения",
+          "В своем хранилище или в облаке",
+          "Да, если проекты ходят в одну память",
+          "Нет",
+          "Нет",
+          "Открытый код, облако платное"
+        ],
+        [
+          "Letta",
+          "Агент с памятью и ограниченным блоком контекста",
+          "В своей базе",
+          "Частично",
+          "Нет",
+          "Нет",
+          "Открытый код"
+        ],
+        [
+          "Zep и Graphiti",
+          "Граф памяти, где у факта есть интервал действия",
+          "В своем сервисе",
+          "Да",
+          "Нет",
+          "Нет",
+          "Открытый код, облако платное"
+        ]
+      ],
+      "compare_note": "Названия принадлежат их владельцам. Таблица описывает назначение, а не замер: чужие продукты меняются, и эта страница за них не отвечает.",
+      "glossary": [
+        [
+          "Lesson",
+          "Урок: разобранный провал с причиной и механизмом, который закрывает повтор"
+        ],
+        [
+          "Pin",
+          "Закрепление: названный механизм (хук, запрет, прибор или тест), который делает повтор невозможным"
+        ],
+        [
+          "Collapse",
+          "Схлопывание: отдельный проход, который сливает похожие уроки в одно правило"
+        ]
+      ],
+      "safety": [
+        "Уроки лежат на вашем диске, в одном файле. Наружу не уходит ничего: у прибора нет ни сети, ни зависимостей.",
+        "Фильтр секретов стоит на записи, а не на выдаче. Токен, ключ и приватный ключ режутся до того, как строка попадет в журнал.",
+        "База живет вне репозитория проекта: уроки несут пути и имена чужих работ, и в публичном дереве им не место.",
+        "Журнал только дописывается. Ошибочную запись закрывают датой, и она остается в истории вместе с причиной закрытия.",
+        "Прибор запускается из исходников без установки пакетов: три файла на голом Node.",
+        "Съем читает транскрипт сессии на вашей машине и никуда его не копирует."
+      ],
+      "safety_tail": "Что именно попадает в базу и куда писать о найденной дыре: [SECURITY.ru.md](SECURITY.ru.md).",
+      "status": "Статус: в ежедневной работе. База владельца держит больше восьмидесяти активных уроков, а ворота стоят в ночном прогоне и уже останавливали его на незакрепленном повторе.",
+      "limits": [
+        "Повтор ловится отпечатком машинного съема. Два урока, написанные прозой про одно и то же разными словами, прибор в дубль не сведет.",
+        "Причину дописывает человек или агент. Машина берет только то, что видно с диска: код возврата, упавшую команду, отказ ворот.",
+        "Схлопывание предлагает правило, а решение оставляет вам: слияние идет отдельным проходом и показывает, что именно сливает.",
+        "Съем проверен на транскриптах Claude Code. Другие агентские CLI пишут журнал иначе, и для них нужен свой разбор.",
+        "Windows пока не проверен."
+      ],
+      "docs": "Глубже: [онбординг](docs/ONBOARDING.ru.md) с первым запуском по шагам и [как это работает](docs/HOW-IT-WORKS.ru.md) с разбором каждой стадии.",
+      "license": "Проект доступен по [лицензии MIT](LICENSE)."
+    },
+    "zh": {
+      "title": "Koiz",
+      "name": "Koiz",
+      "tagline": "Koiz 用一份教训库管住所有项目：失败的原因没有被机制关掉，工作就停在那里。",
+      "hero_alt": "白色大理石的科俄斯站在古典石柱旁，右手竖握轴杖，掌上摊开的大理石册页被一根金色别针穿透，蓝色路径在日光下汇到他脚边",
+      "welcome": "你好，我是 Fil。\n\n我做 Koiz，是因为同一个坑连着第三个项目又踩了一次。教训其实写过，它躺在另一个仓库、另一份日志里，没人在需要的时候读到。\n\n试试看。坏了就到 Issues 里写，我会读。有用就点个星标，再拿给同时管好几个项目的人看看。Olympuz 的其他项目在这里：https://zarubinvibe.com",
+      "what": "Koiz 是你所有项目共用的一份教训库。一份日志，一个检索口，一套纪律。\n\n教训进来的方式是拆解，不是复述：什么坏了，怎么复现，为什么会这样，被什么关掉了。最后一栏最重要。它写着「没有」，这条教训就还没做完。",
+      "why": "错误很少是新的。它半年前在另一个项目里已经发生过，当时也写了结论。那条记录留在那个项目的日志里，而今天你的手在另一个仓库上，没人记得它存在。\n\n再往后更麻烦。教训越堆越多，重复的不合并，过期的不标注。一年之后就是一堵没人读的文字墙，等于没有。",
+      "advantage": "教训靠机制关掉，不靠决心。",
+      "better": "写成文字的规则会被读完、被认同，然后照旧不执行。机制不提建议：钩子、禁止规则、仪器或测试，直接不让这件事发生第二次。Koiz 在写入时就要求说出这个机制，没有机制的教训再来一次，闸门就变红。",
+      "how": "工作分阶段走。机器只取磁盘能证明的东西，智能体只补上意义，固定这一步和写入分开检查。",
+      "quick_intro": "需要 Git、Node 20 或更新的版本，以及三种入口里的任意一种：Claude Code、Codex CLI，或者一个普通终端。",
+      "quick_extra": "上面三行就是全部安装。`bash install.sh` 会建好教训库，并把采集挂到会话结束上，每一步之前都先问你。它不需要任何智能体，一个终端就够。\n\n**Claude Code。** 在这个目录里运行 `claude`，然后说 `/koiz-setup`。安装会以对话方式进行，一次问一个问题。\n\n**Codex CLI。** 在同一个目录运行 `codex`。项目规则已经写在 `AGENTS.md` 里。\n\n**完全不用智能体。** `node scripts/koiz.mjs ask \"什么地方坏过\"` 会把库里和你问题相关的内容列出来，不安装任何东西。",
+      "quick_result": "教训库建好了，采集挂在会话结束上，`node scripts/koiz.mjs debt` 会告诉你哪条教训又回来了、而且到现在还没有任何机制拦着它。",
+      "compare_header": [
+        "方案",
+        "这是什么",
+        "教训存在哪里",
+        "能否作用于别的项目",
+        "是否要求机制",
+        "会不会拦住工作",
+        "价格"
+      ],
+      "compare": [
+        [
+          "**Koiz**",
+          "带强制固定的教训库",
+          "你自己磁盘上的一份日志",
+          "能，检索键是错误类别，不是仓库名",
+          "要，固定这一栏必须填",
+          "会，没固定的重复会让闸门变红",
+          "自己的工具，免费"
+        ],
+        [
+          "手写复盘",
+          "一次糟糕会话之后的笔记",
+          "写在哪儿就在哪儿",
+          "不能",
+          "不要",
+          "不会",
+          "每次复盘花掉你的时间"
+        ],
+        [
+          "`CLAUDE.md` 和 `AGENTS.md`",
+          "写在仓库里的文字规则",
+          "写在哪个项目就在哪个项目",
+          "不能，文件只活在一棵树里",
+          "不要",
+          "不会",
+          "免费"
+        ],
+        [
+          "Cursor Rules",
+          "交给智能体的编辑器规则",
+          "项目设置里",
+          "不能",
+          "不要",
+          "不会",
+          "包含在订阅里"
+        ],
+        [
+          "mem0",
+          "智能体记忆：事实和偏好",
+          "自己的存储或云端",
+          "能，前提是项目共用一份记忆",
+          "不要",
+          "不会",
+          "开源，云端收费"
+        ],
+        [
+          "Letta",
+          "带记忆和有限上下文块的智能体",
+          "自己的数据库",
+          "部分能",
+          "不要",
+          "不会",
+          "开源"
+        ],
+        [
+          "Zep 和 Graphiti",
+          "记忆图谱，事实带有生效区间",
+          "自己的服务",
+          "能",
+          "不要",
+          "不会",
+          "开源，云端收费"
+        ]
+      ],
+      "compare_note": "名称归各自所有者。这张表描述的是用途，不是实测：别人的产品会变，这个页面不替它们做承诺。",
+      "glossary": [
+        [
+          "Lesson",
+          "教训：一次失败的完整拆解，包含原因和关掉重复的机制"
+        ],
+        [
+          "Pin",
+          "固定：说得出名字的机制，钩子、禁止规则、仪器或测试，让重复不可能发生"
+        ],
+        [
+          "Collapse",
+          "归并：单独跑一遍，把相似的教训合成一条规则"
+        ]
+      ],
+      "safety": [
+        "所有教训都在你自己的磁盘上，只有一个文件。什么都不会外发：这个仪器没有网络，也没有依赖。",
+        "密钥过滤放在写入这一侧，不是读取这一侧。令牌、密钥和私钥在进入日志之前就被切掉。",
+        "教训库放在项目仓库之外：教训里带着路径和别人项目的名字，公开的代码树不是它该待的地方。",
+        "日志只追加。写错的记录用日期关掉，它连同关闭原因一起留在历史里。",
+        "仪器直接从源码运行，不用装任何包：裸 Node 上的三个文件。",
+        "采集在你自己的机器上读会话记录，不会把它复制到任何地方。"
+      ],
+      "safety_tail": "到底什么会进到库里、发现漏洞往哪里写，都在 [SECURITY.zh.md](SECURITY.zh.md) 里。",
+      "status": "状态：每天都在用。作者的库里有八十多条生效教训，闸门装在夜间流程上，已经因为一次没固定的重复把夜里的活儿拦下来过。",
+      "limits": [
+        "重复是靠机器采集的指纹认出来的。同一件事用不同措辞写成两条散文教训，仪器不会把它们并成一条。",
+        "原因由人或智能体补写。机器只取磁盘能看到的：退出码、失败的命令、被拒的闸门。",
+        "归并只提出规则，决定权留给你：合并单独跑一遍，并且会把合了什么摊开给你看。",
+        "采集在 Claude Code 的会话记录上验证过。别的智能体命令行日志格式不同，需要各自的读取方式。",
+        "Windows 还没有验证。"
+      ],
+      "docs": "更深入：[上手引导](docs/ONBOARDING.zh.md) 一步一步带你走完第一次运行，[工作原理](docs/HOW-IT-WORKS.zh.md) 把每个阶段都拆开讲。",
+      "license": "本项目以 [MIT 许可证](LICENSE) 提供。"
+    }
+  },
+  "stages": {
+    "capture": {
+      "en": {
+        "short": "The machine lifts the failure off the disk when the session closes, with nothing typed by hand.",
+        "body": "A `SessionEnd` hook hands the instrument the transcript of the session that just closed. The instrument takes only what the disk can prove: failed commands, exit codes, refused gates, the number of attempts.\n\nThe watchdog doing its job is not a failure. A blocker that fired, and any piece of evidence shorter than three meaningful words, never reach the base. Otherwise the debt would turn the gate red over nothing.",
+        "result": "draft lessons collected without a single line typed by hand.",
+        "alt": "A marble table with a stack of thin marble sheets and blue paths arriving at it from the left edge"
+      },
+      "ru": {
+        "short": "Машина снимает провал с диска на закрытии сессии, без ручного набора.",
+        "body": "Хук `SessionEnd` отдает прибору транскрипт закрывшейся сессии. Прибор берет оттуда только то, что видно с диска: упавшие команды, коды возврата, отказы ворот, число попыток.\n\nРабота сторожа провалом не считается. Сработавший блокер и улика короче трех значимых слов в базу не идут: иначе долг красил бы ворота на ровном месте.",
+        "result": "черновики уроков, собранные без единой строки, набранной руками.",
+        "alt": "Мраморный стол со стопкой тонких мраморных листов, к нему с левого края приходят голубые пути"
+      },
+      "zh": {
+        "short": "会话结束时，机器直接从磁盘上把失败取下来，一个字都不用手打。",
+        "body": "`SessionEnd` 钩子把刚结束的会话记录交给仪器。仪器只取磁盘能证明的东西：失败的命令、退出码、被拒的闸门、重试了几次。\n\n守卫正常工作 不算失败。已经拦住的阻断，以及短于三个实义词的证据，都不会进库。否则欠账会无缘无故把闸门染红。",
+        "result": "一批草稿教训，全程没有手打一行。",
+        "alt": "大理石桌上放着一摞薄薄的大理石片，蓝色路径从画面左边一直连到桌前"
+      }
+    },
+    "cause": {
+      "en": {
+        "short": "The agent adds the one thing the machine cannot know: why it happened.",
+        "body": "A captured draft has an empty \"why\". Until the cause is found, the lesson is unfinished and does not go out as ready.\n\nThe order matters and does not work in reverse. The machine takes the facts, a person or an agent adds the meaning. An agent that guesses facts writes convincing untruth.",
+        "result": "a lesson with a cause instead of a description of the symptom.",
+        "alt": "Koios with the axis rod raised, looking down at the open marble ledger resting on his palm"
+      },
+      "ru": {
+        "short": "Агент дописывает единственное, чего машина знать не может: почему так вышло.",
+        "body": "У снятого черновика поле «почему» пустое. Пока причина не дознана, урок не закончен и готовым в выдачу не идет.\n\nПорядок важен и в обратную сторону не работает. Факты берет машина, смысл дописывает человек или агент. Агент, который угадывает факты, пишет убедительную неправду.",
+        "result": "урок с причиной вместо описания симптома.",
+        "alt": "Койз с поднятым стержнем оси смотрит на раскрытый мраморный свод, лежащий у него на ладони"
+      },
+      "zh": {
+        "short": "智能体补上机器不可能知道的那一项：为什么会这样。",
+        "body": "采集来的草稿里，「为什么」是空的。原因没查出来，这条教训就没做完，也不会作为成品被检索到。\n\n顺序很重要，反过来不成立。事实由机器取，意义由人或智能体补。让智能体去猜事实，写出来的是很像样的假话。",
+        "result": "一条带原因的教训，而不是一句症状描述。",
+        "alt": "科俄斯举着轴杖，低头看着摊在自己掌上的那本大理石册页"
+      }
+    },
+    "pin": {
+      "en": {
+        "short": "The lesson is tied to a mechanism that makes the repeat impossible.",
+        "body": "The pin field takes five values: `hook`, `deny`, an instrument, a test, and \"nothing\". Home-made values are refused, and a pin without a reference to a file or a command is not accepted at all.\n\n\"Nothing\" is a legal value and an honest admission. It says the mechanism does not exist yet, and it is exactly what later raises the lesson as a debt.",
+        "result": "a record where you can see what closes the repeat.",
+        "alt": "A gold pin driven straight through the page of an open marble ledger, its head standing above the page"
+      },
+      "ru": {
+        "short": "Урок привязывается к механизму, который делает повтор невозможным.",
+        "body": "Поле закрепления принимает пять значений: `hook`, `deny`, прибор, тест и «ничем». Самодельные значения прибор отвергает, а закрепление без ссылки на файл или команду не принимает вовсе.\n\n«Ничем» тоже законное значение и честное признание. Оно говорит, что механизма пока нет, и именно оно потом поднимает урок долгом.",
+        "result": "запись, у которой видно, чем закрыт повтор.",
+        "alt": "Золотая шпилька продета насквозь через страницу раскрытого мраморного свода, ее головка стоит над листом"
+      },
+      "zh": {
+        "short": "教训被绑到一个让重复不可能发生的机制上。",
+        "body": "固定这一栏只收五个值：`hook`、`deny`、仪器、测试，以及「没有」。自造的值会被拒绝，没有指向具体文件或命令的固定也不收。\n\n「没有」是合法值，也是诚实的承认。它说明机制还不存在，而正是它，之后会把这条教训抬成一笔欠账。",
+        "result": "一条能看清楚是什么在拦住重复的记录。",
+        "alt": "一根金色别针笔直穿过摊开的大理石册页，针头立在纸面之上"
+      }
+    },
+    "collapse": {
+      "en": {
+        "short": "Similar lessons merge into one rule in a pass of their own.",
+        "body": "Merging on write is expensive and loses data, so it moved into a separate command. `collapse` finds three similar lessons, proposes a shared rule, and shows exactly what it merges.\n\nA stale lesson is never erased. It is closed by date and stays in history. It is not a lie, it simply stopped applying.",
+        "result": "one rule instead of three records, and a base that does not grow forever.",
+        "alt": "Three thin marble sheets converging into one thicker sheet on a marble table"
+      },
+      "ru": {
+        "short": "Похожие уроки сливаются в одно правило отдельным проходом.",
+        "body": "Слияние на записи стоит дорого и теряет данные, поэтому оно вынесено в отдельную команду. `collapse` находит три похожих урока, предлагает общее правило и показывает, что именно сливает.\n\nУстаревший урок не стирается. Он закрывается датой и остается в истории. Он не ложь, он просто перестал действовать.",
+        "result": "одно правило вместо трех записей и база, которая не растет бесконечно.",
+        "alt": "Три тонких мраморных листа сходятся в один лист потолще на мраморном столе"
+      },
+      "zh": {
+        "short": "相似的教训在单独一趟里合成一条规则。",
+        "body": "写入时顺手合并既贵又会丢数据，所以它被拆成了一条单独的命令。`collapse` 找出三条相似的教训，提出一条共同规则，并把合了什么摊开给你看。\n\n过期的教训不会被删掉。它按日期关闭，留在历史里。它不是假话，只是不再生效了。",
+        "result": "三条记录变成一条规则，库也不会无止境地长下去。",
+        "alt": "三片薄薄的大理石片在大理石桌上汇成一片更厚的石片"
+      }
+    },
+    "gate": {
+      "en": {
+        "short": "An unpinned repeat stops the work instead of staying a note.",
+        "body": "The `gate` command exits non-zero when a lesson came back and is still pinned to \"nothing\". In the owner's house that command stands in the nightly run, and it has already stopped it.\n\nThere are two ways out and both are honest: close it with a mechanism, or admit the rule does not work and close it by date. A deferral needs a date and a reason.",
+        "result": "a repeat nobody can walk past in silence.",
+        "alt": "An upright marble plate with a clean rectangular opening cut through it, standing on a marble table"
+      },
+      "ru": {
+        "short": "Незакрепленный повтор останавливает работу, а не остается заметкой.",
+        "body": "Команда `gate` выходит ненулевым кодом, когда урок вернулся и до сих пор закреплен «ничем». В доме владельца эта команда стоит в ночном прогоне и уже останавливала его.\n\nВыхода два, и оба честные: закрыть механизмом или признать правило нерабочим и закрыть его датой. Отсрочка требует даты и причины.",
+        "result": "повтор, мимо которого нельзя пройти молча.",
+        "alt": "Мраморная плита с прорезанным насквозь прямоугольным проемом стоит на мраморном столе"
+      },
+      "zh": {
+        "short": "没有固定的重复会拦住工作，而不是变成一条笔记。",
+        "body": "`gate` 命令在教训回来、而固定栏还写着「没有」时，以非零码退出。在作者那边，这条命令挂在夜间流程上，已经真的把夜里的活儿拦下来过。\n\n出路有两条，都很诚实：用机制关掉它，或者承认这条规则不成立，按日期关掉。要延期就得写上日期和理由。",
+        "result": "一次没法默默绕过去的重复。",
+        "alt": "一块竖立的大理石板，中间开着一个干净的长方形通孔，立在大理石桌上"
+      }
+    }
+  }
+}

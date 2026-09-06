@@ -1,0 +1,20 @@
+Use case: stylized-concept
+Asset type: canon frame for a published document page of a project of the Olympuz family
+Primary request: one wide frame that carries the meaning of this page at a glance, in the same light and material as the rest of the project.
+Input images: Image 1 is the immutable Pantheon style reference; Image 2 is the required family-signature column; Image 3 is the project character sheet and Image 4 the project prop sheet - the axis rod, the open marble ledger, the gold pin, the stack of marble leaves, the gate plate and the marble table must match those sheets exactly.
+Subject: Koios stands behind the low marble table, his head turned down toward the open marble ledger resting on his upturned left palm, the muted-gold axis rod upright in his right hand with its lower end on the ground. One muted-gold pin is driven through the right-hand page of the ledger. Three thin sky-blue paths come in along the ground from the left edge of the frame and converge at the lower end of the rod. The table in front of him is empty and clean.
+Composition/framing: 16:9 landscape. The figure stands slightly left of centre behind the table, with generous empty ivory space above him. A classical white-marble column stands at the far right as the family signature, clearly separated from the objects. Generous empty ivory space, nothing overlapping, nothing cropped.
+Style/medium: premium restrained 3D marble render, physically plausible materials, warm ivory Apple-like presentation, museum plate feeling
+Lighting/mood: soft daylight from upper left, long gentle shadows, calm and welcoming. Gold glows softly FROM WITHIN, never lit by a lamp, a neon tube or a hard rim light. No surface is left flat and dead.
+Color palette: ivory #F3EFE8, bright ivory #FBFAF6, white marble, muted gold #C9A87A for the rod, the pin and the thread only, sky blue #B8D6EA for the ground paths only, charcoal #3E3A36
+Constraints:
+- Every object rests on a surface and casts a shadow. Nothing hovers, nothing balances on a point.
+- Each page of the ledger carries exactly three carved horizontal grooves and no writing.
+- The gold pin pierces the page and stands upright out of it, never lying on top of it.
+- The axis rod is straight and unadorned with one plain smooth marble ring near its top.
+- The blue paths lie flat on the ground along their whole length. They never rise into the air.
+- The figure is the same person as the character sheet: bare head with one plain flat marble fillet across the brow, short carved beard, open level eyes, chiton to mid-calf with a himation over the left shoulder, one belt at the waist, barefoot.
+- Anatomically correct hands with exactly five fingers and one clearly readable thumb, fingers not fused.
+- Preserve the reference style; highest final quality; maximum resolution.
+Avoid: writing of any kind, letters, digits, veil, hood, helmet, crown, blindfold, hearth, fire, flame, scales, sword, owl, wings, lightning bolt, screens, keyboards, cables, modern devices, floating objects, dark background, black background, neon, purple gradient, smoky cinema lighting, heavy bronze, metallic or plastic marble, watermark, callout labels
+Text (verbatim): No readable text, no letters, no digits, no callout labels anywhere in the image.

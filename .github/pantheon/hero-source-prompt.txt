@@ -1,0 +1,21 @@
+Use case: stylized-concept
+Asset type: wide hero image for a project of the Olympuz family
+Primary request: one wide frame that says at a glance what this project does - failures from many projects arrive as one flow, and each one is pinned down before it is allowed to leave.
+Input images: Image 1 is the immutable Pantheon style reference; Image 2 is the required family-signature column; Image 3 is the project character sheet and Image 4 the project prop sheet - the axis rod, the open marble ledger, the gold pin, the stack of marble leaves, the gate plate and the marble table must match those sheets exactly.
+Subject: Koios stands slightly left of centre behind the low marble table, his head turned down toward the open marble ledger resting on his upturned left palm, the muted-gold axis rod upright in his right hand with its lower end on the ground. One muted-gold pin is driven straight through the right-hand page of the ledger. On the table beside him lie a square stack of thin marble leaves and, at the right end of the table, the upright marble gate plate with its rectangular opening cut clean through. Three thin sky-blue paths come in along the ground from the left edge of the frame and converge at the lower end of the axis rod.
+Composition/framing: 16:9 landscape. The figure and the table occupy the middle band with generous empty ivory space above. A classical white-marble column stands at the far right as the family signature, clearly separated from the figure and behind the gate plate. Nothing is cropped, nothing overlaps a face of the ledger or of the gate plate.
+Style/medium: premium restrained 3D marble sculpture render, monumental carving with a real cornice profile and deep drapery, physically plausible materials, warm ivory Apple-like presentation, museum plate feeling
+Lighting/mood: soft daylight from upper left, long gentle shadows, calm and welcoming. The axis rod and the pin glow softly FROM WITHIN, as if lit by their own material, never by a lamp, a neon tube or a hard rim light. No surface is left flat and dead.
+Color palette: ivory #F3EFE8, bright ivory #FBFAF6, white marble, muted gold #C9A87A for the axis rod and the pin only, sky blue #B8D6EA for the ground paths only, charcoal #3E3A36
+Constraints:
+- The figure is the same person as the character sheet: bare head with one plain flat marble fillet across the brow, short carved beard, open level eyes, chiton to mid-calf with a himation over the left shoulder, one belt at the waist, barefoot with both feet flat on the ground.
+- He wears NO blindfold, NO veil, NO hood, NO helmet, NO crown and NO laurel, and there is no fire, no flame, no hearth, no scales, no sword and no owl anywhere in the frame.
+- The axis rod is straight and unadorned with one plain smooth marble ring encircling it near the top: no snakes, no wings, no letters, no sun disc.
+- Each page of the ledger carries exactly three carved horizontal grooves and no writing.
+- The gold pin pierces the page and stands upright out of it, its plain flat head above the page. It never rests on top of the page and never floats.
+- The blue paths lie flat on the ground along their whole length and end at the rod. They never rise into the air.
+- Everything rests on a surface and casts a shadow. Nothing hovers, nothing balances on a point.
+- Anatomically correct hands with exactly five fingers and one clearly readable thumb, fingers not fused.
+- Preserve the reference style; highest final quality; maximum resolution.
+Avoid: rainbow of many colors, prismatic colors, veil, hood, helmet, crown, laurel, blindfold, closed eyes, hearth, fire, flame, scales, sword, spear, owl, lightning bolt, sun disc, wings, globe, armillary sphere, telescope, screens, keyboards, cables, modern devices, floating objects, a pin lying on the page instead of piercing it, a small smooth featureless figurine, a flat gradient block instead of carved marble, dark background, black background, neon, purple gradient, smoky cinema lighting, heavy bronze, metallic or plastic marble, watermark, extra or missing fingers, fused fingers, callout labels
+Text (verbatim): No readable text, no letters, no digits, no callout labels anywhere in the image.
