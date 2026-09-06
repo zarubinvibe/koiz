@@ -215,6 +215,8 @@ code .          # VS Code: агент открывается внутри ред
 | проект | Zeuz | Фабрика многоагентных workflow: собирает систему с правилами, гейтами, наблюдаемостью и replay. | [Репозиторий](https://github.com/zarubinvibe/zeuz) · [ZIP](https://github.com/zarubinvibe/zeuz/archive/refs/heads/main.zip) |
 | проект | Lynceuz | Собирает доказательства из открытого веба за ноль рублей и честно останавливается, когда безопасные пути кончились. | [Репозиторий](https://github.com/zarubinvibe/lynceuz) · [ZIP](https://github.com/zarubinvibe/lynceuz/archive/refs/heads/main.zip) |
 | проект | Iriz | Диктовка в строке меню macOS: речь разбирается на вашем Маке, раскладка чинится сама, надиктовка превращается в готовое задание для агента. | [Репозиторий](https://github.com/zarubinvibe/iriz) · [ZIP](https://github.com/zarubinvibe/iriz/archive/refs/heads/main.zip) |
+| проект | Mantoz | Прогоняет продукт через тысячи сгенерированных людей до того, как его увидят живые, и показывает, как ответила каждая группа. | [Репозиторий](https://github.com/zarubinvibe/mantoz) · [ZIP](https://github.com/zarubinvibe/mantoz/archive/refs/heads/main.zip) |
+| проект | Koiz | Одна база уроков на все проекты. Каждый провал доводится до причины, и причина висит открытой, пока ее не закроет хук, ворота или тест. | [Репозиторий](https://github.com/zarubinvibe/koiz) · [ZIP](https://github.com/zarubinvibe/koiz/archive/refs/heads/main.zip) |
 <!-- pantheon-family:end -->
 
 ## Лицензия
