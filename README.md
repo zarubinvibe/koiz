@@ -37,9 +37,11 @@ Koiz keeps one lesson base for every project, and the work stops while the cause
 
 ## What This Is
 
-Koiz is a shared lesson base for all of your projects. One journal, one search key, one discipline.
+Koiz keeps one lesson base for every project you run. One journal, one search key, one discipline.
 
-A lesson arrives as a breakdown, not as a retelling: what broke, how to reproduce it, why it happened, and what closes it. That last field carries the weight. While it says "nothing", the lesson is unfinished.
+A lesson gets in by inquiry, not by retelling: what broke, how to reproduce it, why it happened, and what pins it. That last field is the point. While it says "nothing", the lesson is not finished.
+
+And it does not wait for you to remember. A command fails, Koiz writes the trouble down in that same second and, if this happened before, puts the known fix right next to it.
 
 ## Why It Helps
 
@@ -51,11 +53,13 @@ Then it gets worse. Lessons pile up, duplicates never merge, stale ones are neve
 
 **Main advantage:** a lesson is closed by a mechanism, not by good intentions.
 
-**Why this is better:** A rule written in prose gets read, agreed with, and quietly ignored. A mechanism gives no advice: a hook, a deny rule, an instrument or a test simply refuses to let the thing happen twice. Koiz demands the name of that mechanism when the lesson is written, and turns the gate red when an unpinned lesson shows up a second time.
+**Why this is better:** A rule in prose gets read, agreed with, and ignored anyway. A mechanism gives no advice: a hook, a deny rule, an instrument or a test simply refuses to let it happen twice.
+
+Koiz demands the mechanism at write time, turns the gate red when an unpinned lesson comes back, and speaks up the second you type a command of that class. Not at the review. Before.
 
 ## How It Works
 
-The work runs in stages. The machine takes what the disk can prove, the agent adds only meaning, and pinning is checked apart from writing.
+Five steps, and the agent walks them itself: take the failure down, find the cause, pin it to a mechanism, collapse the lookalikes, close the gate. The machine takes what is visible on disk, the human adds only the meaning.
 
 <!-- workflow-diagram:start -->
 
@@ -139,13 +143,13 @@ codex           # Codex CLI: правила проекта уже лежат в 
 code .          # VS Code: агент открывается внутри редактора
 ```
 
-The three lines above are the whole install. `bash install.sh` creates the base and puts capture on session close, asking before every step. It needs no agent: a terminal is enough.
+The three lines above are the whole install. `bash install.sh` sets up the base, puts the watcher on every tool and the capture on session close, asking permission before each step. It needs no agent: a terminal is enough.
 
 **Claude Code.** Run `claude` in this folder and say `/koiz-setup`. The install goes as a conversation, one question at a time.
 
-**Codex CLI.** Run `codex` in the same place. The project rules already sit in `AGENTS.md`.
+**Codex CLI.** Run `codex` in the same place. The project rules already live in `AGENTS.md`.
 
-**No agent at all.** `node scripts/koiz.mjs ask "what has broken before"` shows what the base knows about your question and installs nothing.
+**No agent at all.** `node scripts/koiz.mjs ask "what has broken before"` shows what the base knows about your question and installs nothing. `koiz next` says what to pin first, `koiz graph` builds the graph you walk instead of reading the whole base.
 
 Never done this before? [The onboarding](docs/ONBOARDING.md) walks the whole first run step by step and says what you see after every command.
 
@@ -174,9 +178,11 @@ Names belong to their owners. The table describes purpose, not a benchmark: othe
 | Command | One instruction you give the computer |
 | Branch | A separate line of changes that does not touch `main` |
 | Pull Request | A request to review your change and accept it |
-| Lesson | One failure taken apart: the cause and the mechanism that closes the repeat |
-| Pin | The named mechanism, a hook, a deny rule, an instrument or a test, that makes the repeat impossible |
-| Collapse | A separate pass that merges similar lessons into one rule |
+| Lesson | A failure taken down to its cause, with the mechanism that closes the repeat |
+| Pin | The named mechanism — hook, deny rule, instrument or test — that makes the repeat impossible |
+| Collapse | A separate pass that merges lookalike lessons into one rule |
+| Guard | The hint: a lesson surfaces before a command of its class, not after the fall |
+| Graph | The lesson graph: nodes and links instead of reading the whole base, free to walk |
 
 ## Safety And Privacy
 
@@ -191,13 +197,14 @@ What actually lands in the base and where to report a hole: [SECURITY.md](SECURI
 
 ## Limits
 
-Status: in use every day. The owner's base holds more than eighty active lessons, and the gate stands in the nightly run, where it has already stopped the night on an unpinned repeat.
+Status: in daily use. The owner's base holds close to a hundred active lessons, twenty of them closed by a mechanism, and the gate stands in the nightly run — it has already stopped it on an unpinned repeat.
 
-- A repeat is caught by the fingerprint of machine capture. Two lessons written as prose about the same thing in different words will not be merged.
-- The cause is written by a person or an agent. The machine takes only what the disk shows: an exit code, a failed command, a refused gate.
-- Collapse proposes a rule and leaves the decision to you: the merge runs as a separate pass and shows exactly what it merges.
-- Capture is proven on Claude Code transcripts. Other agent CLIs write their journals differently and need their own reader.
-- Windows is not tested yet.
+- Repeats are caught by the fingerprint of the machine capture. Two lessons written in prose about the same thing in different words will not be merged.
+- The cause is written by a human or an agent. The machine takes only what is visible on disk: exit codes, the failed command, a gate refusal. It asks right away, but the answer is still yours.
+- The hint before an action fires on a command. Trouble with no command behind it surfaces only at the review.
+- Collapsing proposes a rule and leaves the decision to you: the merge runs as a separate pass and shows exactly what it merges. Raw material without a cause is left alone.
+- Capture is proven on Claude Code transcripts. Other agent CLIs write their journals differently and need their own parser.
+- Windows is not verified yet.
 
 Deeper: [the onboarding](docs/ONBOARDING.md) walks the first run step by step, and [how it works](docs/HOW-IT-WORKS.md) takes every stage apart.
 
@@ -216,17 +223,17 @@ Found a problem instead? Open an issue at [https://github.com/zarubinvibe/koiz/i
 
 This is one of the public [Olympuz projects](https://github.com/zarubinvibe/athena#olympuz-family). Each row opens the repository or downloads its source as a ZIP.
 
-| Type | Name | What it does | Source |
-|---|---|---|---|
-| project | Athena | Portable agent OS that restores a complete Claude and Codex setup on a new Mac. | [Repository](https://github.com/zarubinvibe/athena) · [ZIP](https://github.com/zarubinvibe/athena/archive/refs/heads/main.zip) |
-| project | Helioz | 24/7 agent work conveyor with verified completion markers and goal-based overnight decisions. | [Repository](https://github.com/zarubinvibe/helioz) · [ZIP](https://github.com/zarubinvibe/helioz/archive/refs/heads/main.zip) |
-| project | Mnemazine | Local-first memory system that turns raw inputs into verified reusable knowledge. | [Repository](https://github.com/zarubinvibe/mnemazine) · [ZIP](https://github.com/zarubinvibe/mnemazine/archive/refs/heads/main.zip) |
-| project | Themiz | Multi-agent assistant for Russian litigation with local OCR and review by a five-jurist council. | [Repository](https://github.com/zarubinvibe/themiz) · [ZIP](https://github.com/zarubinvibe/themiz/archive/refs/heads/main.zip) |
-| project | Zeuz | Factory that turns an idea into a governed multi-agent workflow with gates, observability, and replay. | [Repository](https://github.com/zarubinvibe/zeuz) · [ZIP](https://github.com/zarubinvibe/zeuz/archive/refs/heads/main.zip) |
-| project | Lynceuz | Collects public web evidence at zero cost and stops with an honest reason when the safe routes end. | [Repository](https://github.com/zarubinvibe/lynceuz) · [ZIP](https://github.com/zarubinvibe/lynceuz/archive/refs/heads/main.zip) |
-| project | Iriz | macOS menu-bar dictation that decodes speech on your own Mac, fixes wrong keyboard layouts, and turns dictation into a ready task for an agent. | [Repository](https://github.com/zarubinvibe/iriz) · [ZIP](https://github.com/zarubinvibe/iriz/archive/refs/heads/main.zip) |
-| project | Mantoz | Puts an idea in front of five hundred people who do not exist, then shows how each group answered. | [Repository](https://github.com/zarubinvibe/mantoz) · [ZIP](https://github.com/zarubinvibe/mantoz/archive/refs/heads/main.zip) |
-| project | Koiz | A single lesson base for every project. Each failure is taken down to its cause, and the cause stays open until a hook, a gate or a test closes it. | [Repository](https://github.com/zarubinvibe/koiz) · [ZIP](https://github.com/zarubinvibe/koiz/archive/refs/heads/main.zip) |
+| Type | Name | What it does | How it helps this house | Source |
+|---|---|---|---|---|
+| project | Athena | Portable agent OS that restores a complete Claude and Codex setup on a new Mac. | Brings Koiz along with the workspace: the lesson base and its hooks land on a new machine in one run. | [Repository](https://github.com/zarubinvibe/athena) · [ZIP](https://github.com/zarubinvibe/athena/archive/refs/heads/main.zip) |
+| project | Helioz | 24/7 agent work conveyor with verified completion markers and goal-based overnight decisions. | Calls the Koiz gate before the nightly run: an unpinned repeat stops the night. | [Repository](https://github.com/zarubinvibe/helioz) · [ZIP](https://github.com/zarubinvibe/helioz/archive/refs/heads/main.zip) |
+| project | Mnemazine | Local-first memory system that turns raw inputs into verified reusable knowledge. | Takes lessons in as linked notes, so the lesson base lands in the shared knowledge graph. | [Repository](https://github.com/zarubinvibe/mnemazine) · [ZIP](https://github.com/zarubinvibe/mnemazine/archive/refs/heads/main.zip) |
+| project | Themiz | Multi-agent assistant for Russian litigation with local OCR and review by a five-jurist council. | Feeds Koiz a stream of real failures: a legal pipeline breaks differently than a tooling one. | [Repository](https://github.com/zarubinvibe/themiz) · [ZIP](https://github.com/zarubinvibe/themiz/archive/refs/heads/main.zip) |
+| project | Zeuz | Factory that turns an idea into a governed multi-agent workflow with gates, observability, and replay. | Wires the Koiz gate into the workflow it builds: a lesson closes a step instead of sitting in a report. | [Repository](https://github.com/zarubinvibe/zeuz) · [ZIP](https://github.com/zarubinvibe/zeuz/archive/refs/heads/main.zip) |
+| project | Lynceuz | Collects public web evidence at zero cost and stops with an honest reason when the safe routes end. | Looks outward for what the base lacks: someone else's write-up of the same trouble, found before your own inquiry. | [Repository](https://github.com/zarubinvibe/lynceuz) · [ZIP](https://github.com/zarubinvibe/lynceuz/archive/refs/heads/main.zip) |
+| project | Iriz | macOS menu-bar dictation that decodes speech on your own Mac, fixes wrong keyboard layouts, and turns dictation into a ready task for an agent. | Lets you dictate the cause out loud at the moment of failure, when typing it is too slow. | [Repository](https://github.com/zarubinvibe/iriz) · [ZIP](https://github.com/zarubinvibe/iriz/archive/refs/heads/main.zip) |
+| project | Mantoz | Puts an idea in front of five hundred people who do not exist, then shows how each group answered. | Tests a lesson's wording on a reader: a rule only its author understands is not a rule. | [Repository](https://github.com/zarubinvibe/mantoz) · [ZIP](https://github.com/zarubinvibe/mantoz/archive/refs/heads/main.zip) |
+| project | Koiz | A single lesson base for every project. Each failure is taken down to its cause, and the cause stays open until a hook, a gate or a test closes it. | This is the house itself: the lesson base, the watcher at the moment of failure, and the gate on repeats. | [Repository](https://github.com/zarubinvibe/koiz) · [ZIP](https://github.com/zarubinvibe/koiz/archive/refs/heads/main.zip) |
 <!-- pantheon-family:end -->
 
 ## License

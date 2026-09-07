@@ -27,8 +27,12 @@ EOF
 PROJECT=$(basename "${CWD:-$PWD}")
 
 mkdir -p "$(dirname "$LOG")"
+# Съём и схлопывание идут одной командой закрытия. Отдельный проход «когда-нибудь потом»
+# не случается никогда: база растёт, дубли копятся, и через год её никто не читает.
+# Схлопывание берёт только дознанные уроки - сырьё оно не трогает (см. collapse в koiz.mjs).
 {
   printf '── %s · %s\n' "$(date '+%F %T')" "$PROJECT"
   node "$KOIZ" capture --transcript "$TP" --project "$PROJECT" 2>&1
+  node "$KOIZ" collapse 2>&1
 } >> "$LOG" 2>/dev/null || true
 exit 0

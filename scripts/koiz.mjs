@@ -19,8 +19,9 @@ import { readFileSync, existsSync, appendFileSync, mkdirSync, writeFileSync, mkd
 import path from 'node:path'
 import os from 'node:os'
 import { fileURLToPath } from 'node:url'
+import { execFileSync } from 'node:child_process'
 import { kebab, tokens, jaccard, covers, normalize, fp, redact, PINS, expand } from './koiz-lib.mjs'
-import { captureTranscript, parseLessonsMd, classOf } from './koiz-capture.mjs'
+import { captureTranscript, parseLessonsMd, classOf, noteFailure } from './koiz-capture.mjs'
 
 const DB = process.env.KOIZ_DB || path.join(os.homedir(), '.claude', 'koiz', 'lessons.jsonl')
 const BUDGET = Number(process.env.KOIZ_BUDGET || 300)
@@ -52,6 +53,9 @@ export function replay(ops) {
     // Закрепление дописывается операцией, а не правкой записи: журнал остаётся неизменяемым,
     // а история «сначала было ничем, потом закрыли хуком» - самое ценное, что в нём есть.
     else if (o.op === 'pin') { const t = target(o.ref); if (t) { t.pin = o.pin; t.pin_ref = o.pin_ref || null } }
+    // Дознание: причина и починка дописываются операцией. Сырьё съёма превращается в урок
+    // ровно здесь, и в журнале видно, когда именно оно перестало быть сырьём.
+    else if (o.op === 'cause') { const t = target(o.ref); if (t) { t.why = o.why || t.why; t.fix = o.fix || t.fix; t.kind = o.kind || t.kind } }
     else if (o.op === 'link') { const a = L.get(o.ref), b = L.get(o.to); if (a) a.links.add(o.to); if (b) b.links.add(o.ref) }
   }
   return { L, R, seen }
@@ -157,6 +161,23 @@ export function pinLesson(id, pin, ref, db = DB) {
   return { op: 'pin', id, pin, from: t.pin }
 }
 
+// Дознать причину у уже записанного. Отдельная операция, а не новая запись: беда та же,
+// изменилось только знание о ней, и счёт повторов обязан остаться прежним.
+export function causeLesson(id, why, fix, db = DB) {
+  const st = state(db)
+  const t = st.L.get(id) || st.R.get(id)
+  if (!t) throw new Error(`нет такой записи: ${id}`)
+  if (!why || !String(why).trim()) throw new Error('дознание без причины - это не дознание')
+  writeOps(db, [{ op: 'cause', ref: id, at: now(), why: redact(why), fix: fix ? redact(fix) : null, kind: 'урок' }])
+  return { op: 'cause', id, class: t.class }
+}
+
+// Сырьё: машина сняла, причину никто не дознал. Считается по журналу, а не на глаз.
+export const rawLessons = ({ db = DB } = {}) => active(state(db))
+  .filter(l => l.origin === 'машина' && !l.why && !l.fix)
+  .map(l => ({ id: l.id, class: l.class, project: l.project, occ: occ(l), kind: l.kind,
+    what: l.what, repro: l.repro || null, at: l.at }))
+
 // Очередь на закрепление: что закрывать механизмом в первую очередь. Порядок не по вкусу -
 // по цене повтора: сколько раз уже случалось, есть ли чем воспроизвести (значит, закрепимо
 // тестом), и насколько беда разрушительна по глаголу команды.
@@ -246,7 +267,11 @@ export function debts({ db = DB, day = today() } = {}) {
 // похожих урока поднимаются в правило (дерево рефлексии), правило само становится узлом.
 export function collapse({ db = DB, apply = true } = {}) {
   const st = state(db)
-  const act = active(st).sort((a, b) => Date.parse(a.at) - Date.parse(b.at))
+  // Сырьё не обобщают, его дознают. Запись машинного съёма без причины несёт только текст
+  // ошибки: схлопнув такие в «правило», мы получим правило из симптомов, а причина так и
+  // останется ненайденной - и это хуже, чем отсутствие правила.
+  const act = active(st).filter(l => l.why || l.fix || l.op === 'rule')
+    .sort((a, b) => Date.parse(a.at) - Date.parse(b.at))
   const ops = [], dups = [], rules = []
   const dead = new Set()
 
@@ -255,8 +280,15 @@ export function collapse({ db = DB, apply = true } = {}) {
     for (let j = i + 1; j < act.length; j++) {
       if (dead.has(act[j].id)) continue
       if (jaccard(textOf(act[i]), textOf(act[j])) >= 0.8) {
-        dead.add(act[j].id); dups.push({ dup: act[j].id, of: act[i].id })
-        ops.push({ op: 'close', ref: act[j].id, at: now(), valid_to: today(), why: `дубль ${act[i].id}` })
+        // Живым остаётся МЛАДШИЙ (решение владельца 07.09.2026): прежний урок описывает
+        // прежнее устройство, новый - нынешнее. Счёт повторов старшего переносится на
+        // младшего дописанным hit, иначе схлопывание тихо обнулило бы историю повторов.
+        const [stary, mladshy] = [act[i], act[j]]
+        dead.add(stary.id); dups.push({ dup: stary.id, of: mladshy.id })
+        ops.push({ op: 'close', ref: stary.id, at: now(), valid_to: today(), why: `устарел, живёт ${mladshy.id}` })
+        for (let k = 0; k < occ(stary); k++) {
+          ops.push({ op: 'hit', ref: mladshy.id, at: now(), fp: mladshy.fp, project: stary.project, src: `перенос из ${stary.id}` })
+        }
       }
     }
   }
@@ -315,6 +347,18 @@ export function captureSession({ transcript, project = null, db = DB, limit = 8 
   }
   out.budget = enforceBudget({ db })
   return out
+}
+
+// Живое наблюдение: беда записывается сразу и сразу же спрашивает базу - не случалось ли
+// такого раньше. Если случалось, вызывающий получает готовую починку в ту же секунду.
+export function note({ text, repro = null, tool = null, project = 'разное', db = DB } = {}) {
+  const obs = noteFailure({ text, repro, tool, project })
+  if (!obs) return { skipped: 'шум или улика без содержания' }
+  // Спрашиваем базу КОМАНДОЙ, а не текстом ошибки: класс действия задаёт команда, а сообщение
+  // об ошибке начинается со слова вроде «fatal:», которое не программа и роднит несравнимое.
+  const known = guard(repro ? `${repro} ${obs.what}` : obs.what, { db, limit: 1 })
+  const r = addLesson({ ...obs, origin: 'машина', why: null, pin: 'ничем' }, db)
+  return { ...r, class: obs.class, known: known.length ? known[0] : null }
 }
 
 // ── Миграция старого лога ──────────────────────────────────────────────────────
@@ -672,23 +716,35 @@ function selftest() {
     'гейт посчитал зеленым прогон, где проверка вообще не запускалась',
     'скрипт отрапортовал готово, хотя целевой каталог остался пустым',
   ]
-  trio.forEach((t, i) => addLesson({ what: t, class: 'pribor-vret-imenem', project: ['olympuz', 'helioz', 'themis'][i] }, db2))
+  trio.forEach((t, i) => addLesson({ what: t, class: 'pribor-vret-imenem', why: 'судили по имени, а не по делу',
+    fix: 'проверять результат, а не отчёт', project: ['olympuz', 'helioz', 'themis'][i] }, db2))
+  // Сырьё машинного съёма (без причины) в обобщение не идёт: правило из симптомов хуже,
+  // чем отсутствие правила, потому что закрывает вопрос, не ответив на него.
+  addLesson({ what: 'прибор назвал успехом пустой каталог сборки', class: 'pribor-vret-imenem',
+    origin: 'машина', project: 'raw' }, db2)
   const c = collapse({ db: db2, apply: true })
   ok(c.rules.length === 1, `три похожих дают одно правило (получено ${c.rules.length})`)
+  ok(c.rules[0].from.length === 3, 'в правило вошли только дознанные, сырьё осталось снаружи')
+  ok(active(state(db2)).some(l => l.origin === 'машина'), 'сырьё живо и ждёт дознания, а не схлопнуто')
   ok(c.rules[0].from.length === 3, 'правило помнит, из чего сложено')
-  ok(active(state(db2)).length === 0 && activeRules(state(db2)).length === 1, 'члены закрыты, правило активно')
-  ok(readOps(db2).filter(o => o.op === 'add').length === 3, 'схлопывание не стирает исходные записи')
+  ok(active(state(db2)).length === 1 && activeRules(state(db2)).length === 1, 'члены закрыты, правило активно, сырьё осталось')
+  ok(readOps(db2).filter(o => o.op === 'add').length === 4, 'схлопывание не стирает исходные записи')
   ok(ask('прибор', { db: db2 }).some(x => x.kind === 'правило'), 'правило выдается как узел базы')
 
   // 5б. Дубли схлопываются как дубли: почти тот же урок не должен занимать две строки
   // выдачи. Закрывается младший, старший остается - и причина закрытия названа.
   const dbd = path.join(tmp, 'dups.jsonl')
-  const keep = addLesson({ what: 'ворота приняли пробу, которая ничего не проверяла', class: 'probe-empty', project: 'a' }, dbd)
-  const drop = addLesson({ what: 'ворота приняли пробу, которая совсем ничего не проверяла', class: 'probe-empty', project: 'b' }, dbd)
+  const stary = addLesson({ what: 'ворота приняли пробу, которая ничего не проверяла', class: 'probe-empty',
+    why: 'проба не зависела от проверки', project: 'a' }, dbd)
+  const mladshy = addLesson({ what: 'ворота приняли пробу, которая совсем ничего не проверяла', class: 'probe-empty',
+    why: 'проба не зависела от проверки', project: 'b' }, dbd)
   const cd = collapse({ db: dbd, apply: true })
-  ok(cd.dups.length === 1 && cd.dups[0].dup === drop.id && cd.dups[0].of === keep.id, 'почти одинаковые схлопнуты как дубль')
-  ok(/^дубль /.test(state(dbd).L.get(drop.id).closed.why), 'причина закрытия названа дублем')
-  ok(!state(dbd).L.get(keep.id).closed, 'старшая запись осталась активной')
+  // Решение владельца 07.09.2026: живым остаётся МЛАДШИЙ - он описывает нынешнее устройство.
+  ok(cd.dups.length === 1 && cd.dups[0].dup === stary.id && cd.dups[0].of === mladshy.id,
+     'из почти одинаковых живым остаётся младший, старший закрывается')
+  ok(/устарел/.test(state(dbd).L.get(stary.id).closed.why), 'причина закрытия названа устареванием')
+  ok(!state(dbd).L.get(mladshy.id).closed, 'младшая запись осталась активной')
+  ok(occ(state(dbd).L.get(mladshy.id)) >= 2, 'счёт повторов старшего перенесён на младшего, а не потерян')
 
   // 6. Бюджет: переполнение ЗАСТАВЛЯЕТ схлопывать, а не растить базу молча.
   const db3 = path.join(tmp, 'budget.jsonl')
@@ -700,7 +756,8 @@ function selftest() {
     ['ключ попал в текст ошибки и уехал в телеграм', 'secret-leak'],
     ['пароль оказался в дампе состояния конвейера', 'secret-leak'],
   ]
-  six.forEach(([w, k], i) => addLesson({ what: w, class: k, project: `p${i}` }, db3))
+  six.forEach(([w, k], i) => addLesson({ what: w, class: k, why: 'причина дознана на разборе',
+    fix: 'закрыто механизмом того же класса', project: `p${i}` }, db3))
   ok(active(state(db3)).length === 6, 'до бюджета все шесть активны')
   const b = enforceBudget({ db: db3, budget: 4 })
   ok(b.collapsed === true, 'переполнение запускает схлопывание')
@@ -835,6 +892,70 @@ function selftest() {
     closeLesson(q1.id, 'проверка: закрытое не подсказывается', dbq)
   ok(guard('cat > /opt/homebrew/bin/maestro', { db: dbq }).length === 0, 'закрытый датой урок в подсказке не всплывает')
 
+  // 12в. Большая выдача обязана доезжать целиком: process.exit обрывает недописанный stdout,
+  // и читатель получает обрезанный JSON при нулевом коде возврата - беда, неотличимая от пустоты.
+  const dbbig = path.join(tmp, 'big.jsonl')
+  // Тексты различаются СЛОВАМИ, а не числами: нормализация отпечатка съедает цифры, и шесть
+  // десятков «урок номер N» слились бы в одну запись с пятьюдесятью девятью повторами.
+  const slova = ['ворота', 'проба', 'копия', 'ключ', 'путь', 'хук', 'граф', 'кадр', 'отчёт', 'журнал',
+    'очередь', 'план', 'сборка', 'канон', 'пакет', 'сессия', 'запись', 'выдача', 'долг', 'механизм']
+  // Журнал пишем напрямую: шестьсот записей через addLesson - это шестьсот проигрываний
+  // журнала, а нам нужна не запись, а РАЗМЕР выдачи. Он и проверяется: полкилобайта на запись
+  // даёт вывод далеко за буфер канала, и обрыв на выходе становится видимым, а не случайным.
+  const bigOps = []
+  for (let i = 0; i < 600; i++) {
+    bigOps.push({
+      op: 'add', id: `L-big-${i}`, at: now(), fp: `fp${i}`, class: `class-${i}`, project: `p${i}`,
+      kind: 'урок', origin: 'агент', pin: 'ничем', pin_ref: null, valid_from: today(), valid_to: null, links: [],
+      what: `запись ${i}: ` + 'длинное описание беды, которое занимает место в выдаче и не сжимается. '.repeat(6),
+      why: 'причина дознана', fix: 'починка записана', repro: null, session: null, src: null, body: null,
+    })
+  }
+  writeFileSync(dbbig, bigOps.map(o => JSON.stringify(o)).join('\n') + '\n')
+
+  const big = execFileSync('node', [fileURLToPath(import.meta.url), 'ask', '--limit', '500', '--json'],
+    { encoding: 'utf8', env: { ...process.env, KOIZ_DB: dbbig }, maxBuffer: 64 * 1024 * 1024 })
+  const parsed = JSON.parse(big)
+  ok(parsed.length === 500, `вся выдача доехала до читателя (доехало ${parsed.length} из 500)`)
+  // Значение ключа не должно уходить в запрос: `--project p3` обязан отфильтровать по проекту,
+  // а не искать слово «p3» в тексте. Иначе вызывающий думает, что спросил без запроса.
+  const odin = JSON.parse(execFileSync('node', [fileURLToPath(import.meta.url), 'ask', '--project', 'p3', '--limit', '5', '--json'],
+    { encoding: 'utf8', env: { ...process.env, KOIZ_DB: dbbig } }))
+  ok(odin.length === 1 && odin[0].project === 'p3', `ключ и его значение не попадают в запрос (пришло ${odin.length})`)
+
+  // 12г. Наблюдение в момент падения: шум не пишется, беда пишется, повтор становится hit,
+  // а известная починка возвращается сразу - иначе смысла ловить момент нет.
+  const dbn = path.join(tmp, 'note.jsonl')
+  ok(note({ text: 'ok', db: dbn }).skipped, 'улика без содержания не пишется')
+  ok(note({ text: 'PreToolUse:Bash hook error: [bash-guard] BLOCKED опасная команда', db: dbn }).skipped,
+     'работа сторожа провалом не считается')
+  const n1 = note({ text: 'fatal: не найден каталог сборки, сборка остановлена', repro: 'npm run build', db: dbn })
+  ok(n1.op === 'add', 'настоящая беда записывается сразу')
+  const n2 = note({ text: 'fatal: не найден каталог сборки, сборка остановлена', repro: 'npm run build', db: dbn })
+  ok(n2.op === 'hit' && n2.occ === 2, `повтор в той же сессии становится вторым разом (пришло ${n2.op})`)
+  addLesson({ what: 'сборка падала без каталога, потому что путь собирался из пустой переменной',
+    class: 'сборка-без-каталога', why: 'переменная пуста', fix: 'проверять путь до запуска сборки',
+    repro: 'npm run build', project: 'a' }, dbn)
+  const n3 = note({ text: 'fatal: снова не найден каталог сборки при том же запуске', repro: 'npm run build', db: dbn })
+  ok(n3.known && /проверять путь/.test(n3.known.fix), 'известная починка возвращается в момент падения')
+
+  // 12д. Фильтр съёма: ненулевой код сам по себе не беда (его дают grep, diff, test и `|| echo`),
+  // спрос разрешения - решение человека, строка успешного селфтеста - не провал вовсе.
+  const tihie = [
+    'Exit code 1 total 104 drwxr-xr-x@ 14 fil staff 448 Sep 6 22:51',
+    'Permission to use Bash with command cp scripts/x.py docs/bak/',
+    'This Bash command contains multiple operations. The following parts require approval',
+    'selftest: ok — закрытая таблица даёт 0, одна строка отсутствует даёт 1',
+    'claude-sonnet-5[1m] is temporarily unavailable (timed out)',
+  ]
+  for (const t of tihie) ok(noteFailure({ text: t }) === null, `шум не пишется: ${t.slice(0, 40)}`)
+  const gromkie = [
+    'Exit code 1 Traceback (most recent call last): File "<stdin>", line 3',
+    'ENOSPC: no space left on device, open /private/tmp/claude/tasks/x.output',
+    'fatal: не найден каталог сборки, сборка остановлена на первом шаге',
+  ]
+  for (const t of gromkie) ok(noteFailure({ text: t }) !== null, `беда пишется: ${t.slice(0, 40)}`)
+
   // 13. Граф уроков: собирается по журналу, покрывает КАЖДЫЙ активный урок и не тащит
   // закрытые. Граф, который забыл урок, врёт полнотой ровно там, где по нему пойдут.
   const dbg = path.join(tmp, 'graph.jsonl')
@@ -894,6 +1015,15 @@ function selftest() {
 // ── CLI ────────────────────────────────────────────────────────────────────────
 const args = process.argv.slice(2)
 const argOf = n => { const i = args.indexOf(n); return i >= 0 ? args[i + 1] : null }
+
+// Ключи, у которых есть значение. Без этого списка значение ключа принимается за свободный
+// текст: `ask --limit 500 --json` искал по слову «500» и возвращал почти всю базу, а вызывающий
+// думал, что спросил без запроса. Замерено 07.09.2026 на счётчике сырья в хуке.
+const VALUE_FLAGS = new Set(['--what', '--why', '--fix', '--class', '--project', '--pin', '--pin-ref',
+  '--repro', '--kind', '--id', '--until', '--limit', '--dir', '--file', '--text', '--transcript'])
+
+// Свободные слова команды: всё, что не ключ и не значение ключа.
+const positionals = () => args.filter((a, i) => !a.startsWith('--') && !(i > 0 && VALUE_FLAGS.has(args[i - 1])))
 const has = n => args.includes(n)
 const asJson = has('--json')
 const out = (o, code = 0) => { console.log(asJson ? JSON.stringify(o, null, 2) : o); return code }
@@ -905,6 +1035,8 @@ const HELP = `Койз - дознаватель роя. База уроков в
             [--pin hook|deny|прибор|тест|ничем] [--pin-ref <путь>] [--repro "…"]
   capture   --transcript <путь.jsonl> [--project …]   съем машиной с сессии
   ask       "<запрос>" [--class …] [--project …] [--limit N]
+  cause     --id <ID> --why "…" [--fix "…"]              дознать причину у сырья
+  raw       [--limit N]                                 что снято машиной и ждёт причины
   pin       --id <ID> --pin <тип> --pin-ref <путь>      закрепить записанный урок
   next      [--limit N]                                 что закреплять в первую очередь
   close     --id <ID> --why "…"                        закрыть датой (не стереть)
@@ -913,6 +1045,7 @@ const HELP = `Койз - дознаватель роя. База уроков в
   debt                                                  что повторилось и не закреплено
   gate      [--class …]                                 ворота: красит ночь Гелиоза
   guard     --text "<команда или путь>"                 уроки этого класса ПЕРЕД действием
+  note      --text "<ошибка>" [--repro …] [--tool …]     записать провал В МОМЕНТ падения
   graph     [--dir …]                                   граф уроков для обхода без модели
   stats · history --id <ID> · export [--dir …] · migrate --file <lessons.md>
   --selftest [--json]
@@ -921,10 +1054,10 @@ const HELP = `Койз - дознаватель роя. База уроков в
 
 // Команды, которые пишут. После каждой граф пересобирается: правило «не забыть собрать
 // граф» текстом исполняется вероятностно, а собранный после записи граф свеж по построению.
-const WRITING = new Set(['add', 'capture', 'migrate', 'collapse', 'close', 'ack', 'pin'])
+const WRITING = new Set(['add', 'capture', 'migrate', 'collapse', 'close', 'ack', 'pin', 'note', 'cause'])
 
 function main() {
-  const cmd = args.find(a => !a.startsWith('--')) || (has('--selftest') ? '--selftest' : 'help')
+  const cmd = positionals()[0] || (has('--selftest') ? '--selftest' : 'help')
   try {
     switch (cmd) {
       case 'add': {
@@ -948,7 +1081,7 @@ function main() {
         return 0
       }
       case 'ask': {
-        const q = args.find(a => !a.startsWith('--') && a !== 'ask') || null
+        const q = positionals().find(a => a !== 'ask') || null
         const r = ask(q, { project: argOf('--project'), cls: argOf('--class'), limit: Number(argOf('--limit') || 10) })
         if (asJson) return out(r)
         if (!r.length) { console.log('в базе такого класса нет'); return 0 }
@@ -961,6 +1094,17 @@ function main() {
         return 0
       }
       case 'close': return out(closeLesson(argOf('--id'), argOf('--why')))
+      case 'cause': {
+        const r = causeLesson(argOf('--id'), argOf('--why'), argOf('--fix'))
+        return asJson ? out(r) : (console.log(`${r.id}: причина дознана — ${r.class}`), 0)
+      }
+      case 'raw': {
+        const r = rawLessons({})
+        if (asJson) return out(r)
+        console.log(`сырья без причины: ${r.length}`)
+        for (const x of r.slice(0, Number(argOf('--limit') || 20))) console.log(`  ${x.id} · ${x.class} · ${x.occ}× · ${x.what.slice(0, 90)}`)
+        return 0
+      }
       case 'pin': {
         const r = pinLesson(argOf('--id'), argOf('--pin'), argOf('--pin-ref'))
         return asJson ? out(r) : (console.log(`${r.id}: закрепление ${r.from} → ${r.pin}`), 0)
@@ -1019,10 +1163,19 @@ function main() {
         return 0
       }
       case 'guard': {
-        const text = argOf('--text') || args.find(a => !a.startsWith('--') && a !== 'guard') || ''
+        const text = argOf('--text') || positionals().find(a => a !== 'guard') || ''
         const hits = guard(text)
         if (asJson) return out(hits)
         if (hits.length) console.log(guardText(text))
+        return 0
+      }
+      case 'note': {
+        const r = note({ text: argOf('--text'), repro: argOf('--repro'), tool: argOf('--tool'),
+          project: argOf('--project') || cwdProject() })
+        if (asJson) return out(r)
+        if (r.skipped) return 0
+        console.log(`койз: ${r.op === 'hit' ? `это уже случалось (${r.occ}×)` : 'записано'} — ${r.class}`)
+        if (r.known) console.log(`  починка из базы: ${r.known.fix || r.known.why}`)
         return 0
       }
       case 'graph': {
@@ -1050,8 +1203,12 @@ if (runAsTool()) {
   const code = main()
   // Граф пересобирается ПОСЛЕ записи и не может её сорвать: беда графа не отменяет
   // записанный урок, поэтому она печатается предупреждением, а не роняет команду.
-  if (WRITING.has(args.find(a => !a.startsWith('--')) || '')) {
+  if (WRITING.has(positionals()[0] || '')) {
     try { writeGraph({}) } catch (e) { console.error(`койз: граф не пересобран — ${e.message}`) }
   }
-  process.exit(code)
+  // Код возврата ставим полем, а не process.exit: выход обрывает недописанный stdout, и на
+  // большой выдаче (`ask --limit 500 --json` - 50 КБ) читатель получал ОБРЕЗАННЫЙ JSON.
+  // Разбор такого падал, вызывающий считал это пустым ответом, и счётчик сырья молча
+  // показывал ноль при шести десятках записей. Замерено 07.09.2026.
+  process.exitCode = code
 }

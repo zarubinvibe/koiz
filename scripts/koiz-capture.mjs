@@ -42,12 +42,48 @@ const MARKERS = /(^|\n)\s*(красный:|FAIL\s|ВЕРДИКТ: красный
 // error: ... BLOCKED»), запрет гарнесса и голый вердикт без текста несут ноль знания, но
 // умеют накопить повторы и закрыть ночь долгом на ровном месте. Замерено 06.09.2026:
 // пять первых долгов живой базы - четыре сторожа и один пустой «ВЕРДИКТ: красный».
-const NOISE = /hook error:[\s\S]*(BLOCK|БЛОК)|<tool_use_error>\s*Blocked:|^\s*Blocked: /i
+const NOISE = new RegExp([
+  // Сработавший сторож - работа системы, а не беда.
+  'hook error:[\\s\\S]*(BLOCK|БЛОК)', '<tool_use_error>\\s*Blocked:', '^\\s*Blocked: ',
+  // Спрос разрешения и отказ владельца: это решение человека, а не провал инструмента.
+  '^\\s*Permission to use ', '^\\s*This command requires approval',
+  '^\\s*This Bash command contains multiple operations',
+  '^\\s*Output redirection to .* was blocked',
+  "user doesn't want to proceed",
+  'denied by your permission settings',
+  // Строка успешного селфтеста: слово «selftest» в ней есть, беды - нет.
+  // Любая строка селфтеста, в которой не назван провал: селфтест печатает и то, что прошло.
+  '^\\s*selftest: (?![\\s\\S]*(?:провал|ошиб|fail|FAIL|красн))',
+  // Внешняя недоступность модели: не наш дефект и чинить нечем.
+  'is temporarily unavailable',
+].join('|'), 'i')
+
+// Ненулевой код возврата сам по себе бедой не является: его дают grep без совпадений,
+// `diff`, `test`, `|| echo` и десяток обычных приёмов. Улика - то, что НАПИСАНО после кода,
+// а не сам код. Замерено 07.09.2026: из 44 записей сырья 15 были «Exit code 1» с обычным
+// выводом внутри, и они засоряли базу, не сообщая ничего.
+const EXIT_ONLY = /^\s*Exit code \d+\s*(?![\s\S]*(?:error|Error|ERROR|fatal|Traceback|not found|No such file|Permission denied|ENOSPC|SyntaxError|не найден|отказ|красный))/
 
 // Улика без содержания уликой не является: «ВЕРДИКТ: красный» повторится сто раз и
 // ничему не научит. Порог - три значимых слова: ниже отсекается голый вердикт, выше
 // начали бы теряться настоящие короткие отказы вроде «красный: план не по схеме».
 const THIN = t => tokens(normalize(t)).length < 3
+
+// Одна улика в МОМЕНТ падения, а не на закрытии сессии. Разница не в удобстве: на закрытии
+// причину уже не помнят - агент ушёл дальше, владелец переключился, и запись остаётся сырьём
+// навсегда. Здесь же беда свежая, и «почему» стоит одного вопроса.
+//
+// Фильтры те же, что у съёма с транскрипта: работа сторожа не провал, улика короче трёх
+// значимых слов не улика. Иначе хук на каждом инструменте превратит базу в шум за день.
+export function noteFailure({ text, repro = null, tool = null, project = 'разное' } = {}) {
+  const what = String(text || '').replace(/\s+/g, ' ').trim()
+  if (!what || NOISE.test(what) || EXIT_ONLY.test(what) || THIN(what)) return null
+  return {
+    kind: 'провал в сессии', class: classOf(what), fp: fp(what), count: 1, tool,
+    what: redact(what).slice(0, 300), repro: repro ? redact(String(repro).replace(/\s+/g, ' ')).slice(0, 200) : null,
+    project,
+  }
+}
 
 // Транскрипт сессии Claude Code (jsonl). Берем три класса улик:
 //   1) отказ инструмента (tool_result с is_error) - прямой провал;
@@ -59,7 +95,7 @@ export function captureTranscript(raw, { session = 'сессия', project = 'н
   const cmds = new Map()
 
   const push = (kind, what, repro, tool) => {
-    if (NOISE.test(String(what)) || THIN(what)) return
+    if (NOISE.test(String(what)) || EXIT_ONLY.test(String(what)) || THIN(what)) return
     const key = fp(what)
     const prev = found.get(key)
     if (prev) { prev.count++; return }

@@ -22,13 +22,13 @@
       "tagline": "Koiz keeps one lesson base for every project, and the work stops while the cause of a failure has no mechanism closing it.",
       "hero_alt": "White marble Koios beside a classical column, the axis rod upright in his right hand and a gold pin driven through the open marble ledger on his palm, blue paths converging at his feet in daylight",
       "welcome": "Hi. I am Fil.\n\nI built Koiz after stepping on the same rake in a third project in a row. The lesson had been written down. It sat in another repository, in another log, and nobody read it in time.\n\nTry it. If it breaks, write in Issues, I read them. If it helps, leave a star and show it to somebody who runs several projects at once. The rest of the Olympuz projects live here: https://zarubinvibe.com",
-      "what": "Koiz is a shared lesson base for all of your projects. One journal, one search key, one discipline.\n\nA lesson arrives as a breakdown, not as a retelling: what broke, how to reproduce it, why it happened, and what closes it. That last field carries the weight. While it says \"nothing\", the lesson is unfinished.",
+      "what": "Koiz keeps one lesson base for every project you run. One journal, one search key, one discipline.\n\nA lesson gets in by inquiry, not by retelling: what broke, how to reproduce it, why it happened, and what pins it. That last field is the point. While it says \"nothing\", the lesson is not finished.\n\nAnd it does not wait for you to remember. A command fails, Koiz writes the trouble down in that same second and, if this happened before, puts the known fix right next to it.",
       "why": "A mistake is rarely new. It already happened, in another project, six months ago, and the conclusion was written down then. The note sits in that project's log while your hands are in a different repository today, and nobody remembers the note exists.\n\nThen it gets worse. Lessons pile up, duplicates never merge, stale ones are never marked. In a year that is a wall of text nobody reads, which means it is not there at all.",
       "advantage": "a lesson is closed by a mechanism, not by good intentions.",
-      "better": "A rule written in prose gets read, agreed with, and quietly ignored. A mechanism gives no advice: a hook, a deny rule, an instrument or a test simply refuses to let the thing happen twice. Koiz demands the name of that mechanism when the lesson is written, and turns the gate red when an unpinned lesson shows up a second time.",
-      "how": "The work runs in stages. The machine takes what the disk can prove, the agent adds only meaning, and pinning is checked apart from writing.",
+      "better": "A rule in prose gets read, agreed with, and ignored anyway. A mechanism gives no advice: a hook, a deny rule, an instrument or a test simply refuses to let it happen twice.\n\nKoiz demands the mechanism at write time, turns the gate red when an unpinned lesson comes back, and speaks up the second you type a command of that class. Not at the review. Before.",
+      "how": "Five steps, and the agent walks them itself: take the failure down, find the cause, pin it to a mechanism, collapse the lookalikes, close the gate. The machine takes what is visible on disk, the human adds only the meaning.",
       "quick_intro": "You need Git, Node 20 or newer, and any one of three ways in: Claude Code, Codex CLI, or a plain terminal.",
-      "quick_extra": "The three lines above are the whole install. `bash install.sh` creates the base and puts capture on session close, asking before every step. It needs no agent: a terminal is enough.\n\n**Claude Code.** Run `claude` in this folder and say `/koiz-setup`. The install goes as a conversation, one question at a time.\n\n**Codex CLI.** Run `codex` in the same place. The project rules already sit in `AGENTS.md`.\n\n**No agent at all.** `node scripts/koiz.mjs ask \"what has broken before\"` shows what the base knows about your question and installs nothing.",
+      "quick_extra": "The three lines above are the whole install. `bash install.sh` sets up the base, puts the watcher on every tool and the capture on session close, asking permission before each step. It needs no agent: a terminal is enough.\n\n**Claude Code.** Run `claude` in this folder and say `/koiz-setup`. The install goes as a conversation, one question at a time.\n\n**Codex CLI.** Run `codex` in the same place. The project rules already live in `AGENTS.md`.\n\n**No agent at all.** `node scripts/koiz.mjs ask \"what has broken before\"` shows what the base knows about your question and installs nothing. `koiz next` says what to pin first, `koiz graph` builds the graph you walk instead of reading the whole base.",
       "quick_result": "the base exists, capture runs on session close, and `node scripts/koiz.mjs debt` shows which lesson came back with nothing holding it.",
       "compare_header": [
         "Choice",
@@ -108,15 +108,23 @@
       "glossary": [
         [
           "Lesson",
-          "One failure taken apart: the cause and the mechanism that closes the repeat"
+          "A failure taken down to its cause, with the mechanism that closes the repeat"
         ],
         [
           "Pin",
-          "The named mechanism, a hook, a deny rule, an instrument or a test, that makes the repeat impossible"
+          "The named mechanism — hook, deny rule, instrument or test — that makes the repeat impossible"
         ],
         [
           "Collapse",
-          "A separate pass that merges similar lessons into one rule"
+          "A separate pass that merges lookalike lessons into one rule"
+        ],
+        [
+          "Guard",
+          "The hint: a lesson surfaces before a command of its class, not after the fall"
+        ],
+        [
+          "Graph",
+          "The lesson graph: nodes and links instead of reading the whole base, free to walk"
         ]
       ],
       "safety": [
@@ -128,13 +136,14 @@
         "Capture reads the session transcript on your own machine and copies it nowhere."
       ],
       "safety_tail": "What actually lands in the base and where to report a hole: [SECURITY.md](SECURITY.md).",
-      "status": "Status: in use every day. The owner's base holds more than eighty active lessons, and the gate stands in the nightly run, where it has already stopped the night on an unpinned repeat.",
+      "status": "Status: in daily use. The owner's base holds close to a hundred active lessons, twenty of them closed by a mechanism, and the gate stands in the nightly run — it has already stopped it on an unpinned repeat.",
       "limits": [
-        "A repeat is caught by the fingerprint of machine capture. Two lessons written as prose about the same thing in different words will not be merged.",
-        "The cause is written by a person or an agent. The machine takes only what the disk shows: an exit code, a failed command, a refused gate.",
-        "Collapse proposes a rule and leaves the decision to you: the merge runs as a separate pass and shows exactly what it merges.",
-        "Capture is proven on Claude Code transcripts. Other agent CLIs write their journals differently and need their own reader.",
-        "Windows is not tested yet."
+        "Repeats are caught by the fingerprint of the machine capture. Two lessons written in prose about the same thing in different words will not be merged.",
+        "The cause is written by a human or an agent. The machine takes only what is visible on disk: exit codes, the failed command, a gate refusal. It asks right away, but the answer is still yours.",
+        "The hint before an action fires on a command. Trouble with no command behind it surfaces only at the review.",
+        "Collapsing proposes a rule and leaves the decision to you: the merge runs as a separate pass and shows exactly what it merges. Raw material without a cause is left alone.",
+        "Capture is proven on Claude Code transcripts. Other agent CLIs write their journals differently and need their own parser.",
+        "Windows is not verified yet."
       ],
       "docs": "Deeper: [the onboarding](docs/ONBOARDING.md) walks the first run step by step, and [how it works](docs/HOW-IT-WORKS.md) takes every stage apart.",
       "license": "The project is available under the [MIT License](LICENSE)."
@@ -145,13 +154,13 @@
       "tagline": "Койз держит одну базу уроков на все проекты, и работа стоит, пока причина провала не закрыта механизмом.",
       "hero_alt": "Койз из белого мрамора у классической колонны: стержень оси в правой руке, золотая шпилька продета сквозь раскрытый мраморный свод на ладони, голубые пути сходятся к его ногам при дневном свете",
       "welcome": "Привет. Я Фил.\n\nКойз я собрал после того, как третий проект подряд наступил на те же грабли. Урок был записан. Он лежал в другом репозитории, в другом логе, и вовремя его никто не прочитал.\n\nПопробуйте. Сломается, пишите в Issues: я читаю. Пригодилось, поставьте звезду и покажите тому, кто ведет несколько проектов сразу. Остальные проекты Олимпуса здесь: https://zarubinvibe.ru",
-      "what": "Койз держит общую базу уроков для всех ваших проектов. Один журнал, один ключ поиска, одна дисциплина.\n\nУрок сюда попадает разбором, а не пересказом: что сломалось, чем воспроизводится, почему так вышло и чем закрыто. Последнее поле главное. Пока в нем стоит «ничем», урок не закончен.",
+      "what": "Койз держит общую базу уроков для всех ваших проектов. Один журнал, один ключ поиска, одна дисциплина.\n\nУрок сюда попадает разбором, а не пересказом: что сломалось, чем воспроизводится, почему так вышло и чем закрыто. Последнее поле главное. Пока в нем стоит «ничем», урок не закончен.\n\nИ он не ждет, пока вы про него вспомните. Команда упала — Койз записывает беду в ту же секунду и, если такое уже случалось, кладет рядом готовую починку.",
       "why": "Ошибка редко бывает новой. Она уже случалась в другом проекте полгода назад, и вывод тогда записали. Запись лежит в логе того проекта, а руки сегодня работают в другом, и о существовании записи никто не помнит.\n\nДальше хуже. Уроки копятся, дубли не схлопываются, устаревшее не помечается. Через год это стена текста, которую не читают, а значит ее нет.",
       "advantage": "урок закрыт механизмом, а не намерением.",
-      "better": "Правило прозой читают, соглашаются и все равно делают иначе. Механизм ничего не советует: хук, запрет, прибор или тест просто не дают случиться этому второй раз. Койз требует назвать механизм при записи и красит ворота, когда незакрепленный урок пришел снова.",
-      "how": "Работа идет стадиями. Машина берет то, что видно с диска, агент дописывает только смысл, а закрепление проверяется отдельно от записи.",
+      "better": "Правило прозой читают, соглашаются и все равно делают иначе. Механизм ничего не советует: хук, запрет, прибор или тест просто не дают случиться этому второй раз.\n\nКойз требует назвать механизм при записи, красит ворота, когда незакрепленный урок пришел снова, и подсказывает ровно в ту секунду, когда вы набираете команду того же класса. Не после разбора. До.",
+      "how": "Пять шагов, и агент проходит их сам: снять провал, дознать причину, закрепить механизмом, схлопнуть похожее, закрыть воротами. Машина берет то, что видно с диска, человек дописывает только смысл.",
       "quick_intro": "Нужен Git, Node 20 или новее и любой из трех входов: Claude Code, Codex CLI или обычный терминал.",
-      "quick_extra": "Три строки выше и есть вся установка. `bash install.sh` заводит базу и ставит съем на закрытие сессии, спрашивая разрешение перед каждым шагом. Агент ему не нужен: хватает терминала.\n\n**Claude Code.** Запустите `claude` в этой папке и скажите `/koiz-setup`. Установка пройдет разговором, по одному вопросу.\n\n**Codex CLI.** Запустите `codex` там же. Правила проекта уже лежат в `AGENTS.md`.\n\n**Совсем без агента.** `node scripts/koiz.mjs ask \"что уже ломалось\"` покажет, что база знает по вашему запросу, и ничего не поставит.",
+      "quick_extra": "Три строки выше и есть вся установка. `bash install.sh` заводит базу, ставит наблюдателя на каждый инструмент и съем на закрытие сессии, спрашивая разрешение перед каждым шагом. Агент ему не нужен: хватает терминала.\n\n**Claude Code.** Запустите `claude` в этой папке и скажите `/koiz-setup`. Установка пройдет разговором, по одному вопросу.\n\n**Codex CLI.** Запустите `codex` там же. Правила проекта уже лежат в `AGENTS.md`.\n\n**Совсем без агента.** `node scripts/koiz.mjs ask \"что уже ломалось\"` покажет, что база знает по вашему запросу, и ничего не поставит. `koiz next` скажет, что закреплять первым, `koiz graph` соберет граф, по которому потом ходят вместо чтения всей базы.",
       "quick_result": "база заведена, съем стоит на закрытии сессии, а `node scripts/koiz.mjs debt` показывает, какой урок вернулся и до сих пор ничем не закреплен.",
       "compare_header": [
         "Вариант",
@@ -240,6 +249,14 @@
         [
           "Collapse",
           "Схлопывание: отдельный проход, который сливает похожие уроки в одно правило"
+        ],
+        [
+          "Guard",
+          "Подсказка: урок всплывает перед командой своего класса, а не после падения"
+        ],
+        [
+          "Graph",
+          "Граф уроков: узлы и связи вместо чтения всей базы, обход бесплатный"
         ]
       ],
       "safety": [
@@ -251,11 +268,12 @@
         "Съем читает транскрипт сессии на вашей машине и никуда его не копирует."
       ],
       "safety_tail": "Что именно попадает в базу и куда писать о найденной дыре: [SECURITY.ru.md](SECURITY.ru.md).",
-      "status": "Статус: в ежедневной работе. База владельца держит больше восьмидесяти активных уроков, а ворота стоят в ночном прогоне и уже останавливали его на незакрепленном повторе.",
+      "status": "Статус: в ежедневной работе. База владельца держит под сотню активных уроков, двадцать из них закрыты механизмом, а ворота стоят в ночном прогоне и уже останавливали его на незакрепленном повторе.",
       "limits": [
         "Повтор ловится отпечатком машинного съема. Два урока, написанные прозой про одно и то же разными словами, прибор в дубль не сведет.",
-        "Причину дописывает человек или агент. Машина берет только то, что видно с диска: код возврата, упавшую команду, отказ ворот.",
-        "Схлопывание предлагает правило, а решение оставляет вам: слияние идет отдельным проходом и показывает, что именно сливает.",
+        "Причину дописывает человек или агент. Машина берет только то, что видно с диска: код возврата, упавшую команду, отказ ворот. Спрашивает она сразу, но ответ все равно ваш.",
+        "Подсказка перед действием срабатывает по команде. Беда, у которой команды нет вовсе, всплывет только на разборе.",
+        "Схлопывание предлагает правило, а решение оставляет вам: слияние идет отдельным проходом и показывает, что именно сливает. Сырье без дознанной причины оно не трогает.",
         "Съем проверен на транскриптах Claude Code. Другие агентские CLI пишут журнал иначе, и для них нужен свой разбор.",
         "Windows пока не проверен."
       ],
@@ -268,13 +286,13 @@
       "tagline": "Koiz 用一份教训库管住所有项目：失败的原因没有被机制关掉，工作就停在那里。",
       "hero_alt": "白色大理石的科俄斯站在古典石柱旁，右手竖握轴杖，掌上摊开的大理石册页被一根金色别针穿透，蓝色路径在日光下汇到他脚边",
       "welcome": "你好，我是 Fil。\n\n我做 Koiz，是因为同一个坑连着第三个项目又踩了一次。教训其实写过，它躺在另一个仓库、另一份日志里，没人在需要的时候读到。\n\n试试看。坏了就到 Issues 里写，我会读。有用就点个星标，再拿给同时管好几个项目的人看看。Olympuz 的其他项目在这里：https://zarubinvibe.com",
-      "what": "Koiz 是你所有项目共用的一份教训库。一份日志，一个检索口，一套纪律。\n\n教训进来的方式是拆解，不是复述：什么坏了，怎么复现，为什么会这样，被什么关掉了。最后一栏最重要。它写着「没有」，这条教训就还没做完。",
+      "what": "Koiz 为你所有的项目保存同一份教训库。一份日志，一个检索键，一套纪律。\n\n教训是被追问进来的，不是被复述进来的：什么坏了、怎么复现、为什么会这样、被什么钉住。最后那一项才是关键。只要它写着\"没有\"，这条教训就没有完成。\n\n它也不等你想起它。命令一失败，Koiz 当场把这桩麻烦记下来；如果以前发生过，它会把现成的修法一并放在旁边。",
       "why": "错误很少是新的。它半年前在另一个项目里已经发生过，当时也写了结论。那条记录留在那个项目的日志里，而今天你的手在另一个仓库上，没人记得它存在。\n\n再往后更麻烦。教训越堆越多，重复的不合并，过期的不标注。一年之后就是一堵没人读的文字墙，等于没有。",
       "advantage": "教训靠机制关掉，不靠决心。",
-      "better": "写成文字的规则会被读完、被认同，然后照旧不执行。机制不提建议：钩子、禁止规则、仪器或测试，直接不让这件事发生第二次。Koiz 在写入时就要求说出这个机制，没有机制的教训再来一次，闸门就变红。",
-      "how": "工作分阶段走。机器只取磁盘能证明的东西，智能体只补上意义，固定这一步和写入分开检查。",
+      "better": "写成文字的规则，人读了、点头了，照样按老样子做。机制不提建议：钩子、禁令、仪器或测试，直接不让它发生第二次。\n\nKoiz 在写入时就要求你说出机制，未被钉住的教训再次出现时会把闸门变红，而当你敲下同一类命令的那一秒，它就开口。不是在复盘之后，是在之前。",
+      "how": "五步，智能体自己走完：采集失败、追出原因、固定到机制、合并相似、关上闸门。机器负责取走磁盘上看得见的部分，人只补上意义。",
       "quick_intro": "需要 Git、Node 20 或更新的版本，以及三种入口里的任意一种：Claude Code、Codex CLI，或者一个普通终端。",
-      "quick_extra": "上面三行就是全部安装。`bash install.sh` 会建好教训库，并把采集挂到会话结束上，每一步之前都先问你。它不需要任何智能体，一个终端就够。\n\n**Claude Code。** 在这个目录里运行 `claude`，然后说 `/koiz-setup`。安装会以对话方式进行，一次问一个问题。\n\n**Codex CLI。** 在同一个目录运行 `codex`。项目规则已经写在 `AGENTS.md` 里。\n\n**完全不用智能体。** `node scripts/koiz.mjs ask \"什么地方坏过\"` 会把库里和你问题相关的内容列出来，不安装任何东西。",
+      "quick_extra": "上面三行就是全部安装。`bash install.sh` 建好库、把观察者装到每个工具上、把采集装到会话结束，每一步之前都会征求你的同意。它不需要智能体，一个终端就够。\n\n**Claude Code。** 在这个目录里运行 `claude`，然后说 `/koiz-setup`。安装以对话进行，一次一个问题。\n\n**Codex CLI。** 在同一目录运行 `codex`。项目规则已经写在 `AGENTS.md` 里。\n\n**完全不用智能体。** `node scripts/koiz.mjs ask \"以前坏过什么\"` 会告诉你库里关于这个问题知道些什么，并且什么都不安装。`koiz next` 说出该先钉住哪一条，`koiz graph` 生成那张图——以后你走图，而不是通读整个库。",
       "quick_result": "教训库建好了，采集挂在会话结束上，`node scripts/koiz.mjs debt` 会告诉你哪条教训又回来了、而且到现在还没有任何机制拦着它。",
       "compare_header": [
         "方案",
@@ -354,15 +372,23 @@
       "glossary": [
         [
           "Lesson",
-          "教训：一次失败的完整拆解，包含原因和关掉重复的机制"
+          "教训：被追到原因的失败，并带着关上重复的那个机制"
         ],
         [
           "Pin",
-          "固定：说得出名字的机制，钩子、禁止规则、仪器或测试，让重复不可能发生"
+          "钉住：被点名的机制——钩子、禁令、仪器或测试——让重复不可能发生"
         ],
         [
           "Collapse",
-          "归并：单独跑一遍，把相似的教训合成一条规则"
+          "合并：把相似的教训并成一条规则的独立一趟"
+        ],
+        [
+          "Guard",
+          "提示：教训在同类命令之前浮现，而不是在摔倒之后"
+        ],
+        [
+          "Graph",
+          "教训图：用节点和连线代替通读整个库，走图不花钱"
         ]
       ],
       "safety": [
@@ -374,13 +400,14 @@
         "采集在你自己的机器上读会话记录，不会把它复制到任何地方。"
       ],
       "safety_tail": "到底什么会进到库里、发现漏洞往哪里写，都在 [SECURITY.zh.md](SECURITY.zh.md) 里。",
-      "status": "状态：每天都在用。作者的库里有八十多条生效教训，闸门装在夜间流程上，已经因为一次没固定的重复把夜里的活儿拦下来过。",
+      "status": "状态：日常在用。作者的库里有近一百条在用的教训，其中二十条已被机制关上；闸门装在夜间流程里，并且已经因为一条未被钉住的重复而拦下过它。",
       "limits": [
-        "重复是靠机器采集的指纹认出来的。同一件事用不同措辞写成两条散文教训，仪器不会把它们并成一条。",
-        "原因由人或智能体补写。机器只取磁盘能看到的：退出码、失败的命令、被拒的闸门。",
-        "归并只提出规则，决定权留给你：合并单独跑一遍，并且会把合了什么摊开给你看。",
-        "采集在 Claude Code 的会话记录上验证过。别的智能体命令行日志格式不同，需要各自的读取方式。",
-        "Windows 还没有验证。"
+        "重复靠机器采集的指纹识别。两条用不同措辞写下同一件事的散文教训，仪器不会合并。",
+        "原因由人或智能体补上。机器只取磁盘上看得见的部分：返回码、失败的命令、闸门的拒绝。它当场就问，但答案仍然是你的。",
+        "动作之前的提示按命令触发。根本没有命令的麻烦，只能在复盘时浮现。",
+        "合并只提出规则，决定权留给你：它作为独立的一趟运行，并明确显示合并了什么。没有追出原因的素材，它不碰。",
+        "采集在 Claude Code 的记录上验证过。其他智能体 CLI 的日志格式不同，需要各自的解析。",
+        "Windows 尚未验证。"
       ],
       "docs": "更深入：[上手引导](docs/ONBOARDING.zh.md) 一步一步带你走完第一次运行，[工作原理](docs/HOW-IT-WORKS.zh.md) 把每个阶段都拆开讲。",
       "license": "本项目以 [MIT 许可证](LICENSE) 提供。"

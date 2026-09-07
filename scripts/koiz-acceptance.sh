@@ -47,7 +47,8 @@ D3="$TMP/collapse.jsonl"
 for t in "прибор назвал успехом то, чего не делал, судя по имени файла" \
          "гейт посчитал зелёным прогон, где проверка не запускалась" \
          "скрипт отрапортовал готово при пустом целевом каталоге"; do
-  KOIZ_DB="$D3" node "$K" add --what "$t" --class pribor-vret --project приемка >/dev/null 2>&1
+  KOIZ_DB="$D3" node "$K" add --what "$t" --class pribor-vret --project приемка \
+    --why "судили по отчёту, а не по диску" --fix "проверять результат, а не слово" >/dev/null 2>&1
 done
 r=$(KOIZ_DB="$D3" node "$K" collapse --json 2>/dev/null | python3 -c "import json,sys; print(len(json.load(sys.stdin)['rules']))")
 [ "${r:-0}" = 1 ]; say $? "3. три похожих урока схлопнулись в одно правило (правил: ${r:-0})"
@@ -64,7 +65,8 @@ D5="$TMP/budget.jsonl"
 i=0; for t in "копия дома ушла в чужой каталог при сборке пакета" "сборка положила артефакт мимо целевой папки" "архив распакован не туда, куда указывал манифест" \
               "токены утекли в лог отладки при падении" "ключ попал в текст ошибки и уехал в чат" "пароль оказался в дампе состояния"; do
   i=$((i+1)); cls=$([ $i -le 3 ] && echo copy-home || echo secret-leak)
-  KOIZ_DB="$D5" KOIZ_BUDGET=99 node "$K" add --what "$t" --class "$cls" --project "p$i" >/dev/null 2>&1
+  KOIZ_DB="$D5" KOIZ_BUDGET=99 node "$K" add --what "$t" --class "$cls" --project "p$i" \
+    --why "причина дознана на разборе" --fix "закрыто механизмом того же класса" >/dev/null 2>&1
 done
 before=$(KOIZ_DB="$D5" node "$K" stats --json | python3 -c "import json,sys; print(json.load(sys.stdin)['active'])")
 KOIZ_DB="$D5" KOIZ_BUDGET=4 node "$K" add --what "седьмая беда для проверки потолка базы" --class overflow --project p7 >/dev/null 2>&1

@@ -37,9 +37,11 @@ Koiz 用一份教训库管住所有项目：失败的原因没有被机制关掉
 
 ## 这是什么
 
-Koiz 是你所有项目共用的一份教训库。一份日志，一个检索口，一套纪律。
+Koiz 为你所有的项目保存同一份教训库。一份日志，一个检索键，一套纪律。
 
-教训进来的方式是拆解，不是复述：什么坏了，怎么复现，为什么会这样，被什么关掉了。最后一栏最重要。它写着「没有」，这条教训就还没做完。
+教训是被追问进来的，不是被复述进来的：什么坏了、怎么复现、为什么会这样、被什么钉住。最后那一项才是关键。只要它写着"没有"，这条教训就没有完成。
+
+它也不等你想起它。命令一失败，Koiz 当场把这桩麻烦记下来；如果以前发生过，它会把现成的修法一并放在旁边。
 
 ## 它解决什么问题
 
@@ -51,11 +53,13 @@ Koiz 是你所有项目共用的一份教训库。一份日志，一个检索口
 
 **最大的优势：** 教训靠机制关掉，不靠决心。
 
-**为什么这样更好：** 写成文字的规则会被读完、被认同，然后照旧不执行。机制不提建议：钩子、禁止规则、仪器或测试，直接不让这件事发生第二次。Koiz 在写入时就要求说出这个机制，没有机制的教训再来一次，闸门就变红。
+**为什么这样更好：** 写成文字的规则，人读了、点头了，照样按老样子做。机制不提建议：钩子、禁令、仪器或测试，直接不让它发生第二次。
+
+Koiz 在写入时就要求你说出机制，未被钉住的教训再次出现时会把闸门变红，而当你敲下同一类命令的那一秒，它就开口。不是在复盘之后，是在之前。
 
 ## 工作流程
 
-工作分阶段走。机器只取磁盘能证明的东西，智能体只补上意义，固定这一步和写入分开检查。
+五步，智能体自己走完：采集失败、追出原因、固定到机制、合并相似、关上闸门。机器负责取走磁盘上看得见的部分，人只补上意义。
 
 <!-- workflow-diagram:start -->
 
@@ -139,13 +143,13 @@ codex           # Codex CLI: правила проекта уже лежат в 
 code .          # VS Code: агент открывается внутри редактора
 ```
 
-上面三行就是全部安装。`bash install.sh` 会建好教训库，并把采集挂到会话结束上，每一步之前都先问你。它不需要任何智能体，一个终端就够。
+上面三行就是全部安装。`bash install.sh` 建好库、把观察者装到每个工具上、把采集装到会话结束，每一步之前都会征求你的同意。它不需要智能体，一个终端就够。
 
-**Claude Code。** 在这个目录里运行 `claude`，然后说 `/koiz-setup`。安装会以对话方式进行，一次问一个问题。
+**Claude Code。** 在这个目录里运行 `claude`，然后说 `/koiz-setup`。安装以对话进行，一次一个问题。
 
-**Codex CLI。** 在同一个目录运行 `codex`。项目规则已经写在 `AGENTS.md` 里。
+**Codex CLI。** 在同一目录运行 `codex`。项目规则已经写在 `AGENTS.md` 里。
 
-**完全不用智能体。** `node scripts/koiz.mjs ask "什么地方坏过"` 会把库里和你问题相关的内容列出来，不安装任何东西。
+**完全不用智能体。** `node scripts/koiz.mjs ask "以前坏过什么"` 会告诉你库里关于这个问题知道些什么，并且什么都不安装。`koiz next` 说出该先钉住哪一条，`koiz graph` 生成那张图——以后你走图，而不是通读整个库。
 
 第一次做这件事？[上手引导](docs/ONBOARDING.zh.md) 会一步一步带你走完第一次运行，并写清楚每条命令之后你会看到什么。
 
@@ -174,9 +178,11 @@ code .          # VS Code: агент открывается внутри ред
 | Command | 命令：给电脑的一条指令 |
 | Branch | 分支：不影响 `main` 的另一条修改线 |
 | Pull Request | 合并请求：请别人审阅并接受你的修改 |
-| Lesson | 教训：一次失败的完整拆解，包含原因和关掉重复的机制 |
-| Pin | 固定：说得出名字的机制，钩子、禁止规则、仪器或测试，让重复不可能发生 |
-| Collapse | 归并：单独跑一遍，把相似的教训合成一条规则 |
+| Lesson | 教训：被追到原因的失败，并带着关上重复的那个机制 |
+| Pin | 钉住：被点名的机制——钩子、禁令、仪器或测试——让重复不可能发生 |
+| Collapse | 合并：把相似的教训并成一条规则的独立一趟 |
+| Guard | 提示：教训在同类命令之前浮现，而不是在摔倒之后 |
+| Graph | 教训图：用节点和连线代替通读整个库，走图不花钱 |
 
 ## 安全与隐私
 
@@ -191,13 +197,14 @@ code .          # VS Code: агент открывается внутри ред
 
 ## 局限
 
-状态：每天都在用。作者的库里有八十多条生效教训，闸门装在夜间流程上，已经因为一次没固定的重复把夜里的活儿拦下来过。
+状态：日常在用。作者的库里有近一百条在用的教训，其中二十条已被机制关上；闸门装在夜间流程里，并且已经因为一条未被钉住的重复而拦下过它。
 
-- 重复是靠机器采集的指纹认出来的。同一件事用不同措辞写成两条散文教训，仪器不会把它们并成一条。
-- 原因由人或智能体补写。机器只取磁盘能看到的：退出码、失败的命令、被拒的闸门。
-- 归并只提出规则，决定权留给你：合并单独跑一遍，并且会把合了什么摊开给你看。
-- 采集在 Claude Code 的会话记录上验证过。别的智能体命令行日志格式不同，需要各自的读取方式。
-- Windows 还没有验证。
+- 重复靠机器采集的指纹识别。两条用不同措辞写下同一件事的散文教训，仪器不会合并。
+- 原因由人或智能体补上。机器只取磁盘上看得见的部分：返回码、失败的命令、闸门的拒绝。它当场就问，但答案仍然是你的。
+- 动作之前的提示按命令触发。根本没有命令的麻烦，只能在复盘时浮现。
+- 合并只提出规则，决定权留给你：它作为独立的一趟运行，并明确显示合并了什么。没有追出原因的素材，它不碰。
+- 采集在 Claude Code 的记录上验证过。其他智能体 CLI 的日志格式不同，需要各自的解析。
+- Windows 尚未验证。
 
 更深入：[上手引导](docs/ONBOARDING.zh.md) 一步一步带你走完第一次运行，[工作原理](docs/HOW-IT-WORKS.zh.md) 把每个阶段都拆开讲。
 
@@ -216,17 +223,17 @@ code .          # VS Code: агент открывается внутри ред
 
 这是 [Olympuz 家族](https://github.com/zarubinvibe/athena#olympuz-family) 的公开项目之一。表格里的每一行都可以打开仓库，或者直接下载源码压缩包。
 
-| 类型 | 名称 | 做什么 | 获取 |
-|---|---|---|---|
-| 项目 | Athena | 可携带的智能体操作系统：在新的 Mac 上重建 Claude 与 Codex 的工作环境。 | [仓库](https://github.com/zarubinvibe/athena) · [ZIP](https://github.com/zarubinvibe/athena/archive/refs/heads/main.zip) |
-| 项目 | Helioz | 全天候的智能体工作传送带，带可验证的完成标记和按目标做出的夜间决策。 | [仓库](https://github.com/zarubinvibe/helioz) · [ZIP](https://github.com/zarubinvibe/helioz/archive/refs/heads/main.zip) |
-| 项目 | Mnemazine | 本地优先的记忆系统：把原始材料变成可复用的、已核验的知识。 | [仓库](https://github.com/zarubinvibe/mnemazine) · [ZIP](https://github.com/zarubinvibe/mnemazine/archive/refs/heads/main.zip) |
-| 项目 | Themiz | 面向俄罗斯诉讼的多智能体助手，本地识别扫描件，五位法学家组成合议审阅。 | [仓库](https://github.com/zarubinvibe/themiz) · [ZIP](https://github.com/zarubinvibe/themiz/archive/refs/heads/main.zip) |
-| 项目 | Zeuz | 工作流工厂：把一个想法变成带规则、闸门、可观测性和回放的多智能体系统。 | [仓库](https://github.com/zarubinvibe/zeuz) · [ZIP](https://github.com/zarubinvibe/zeuz/archive/refs/heads/main.zip) |
-| 项目 | Lynceuz | 以零成本收集公开网页证据；安全路径走完时，它会给出诚实的理由并停下。 | [仓库](https://github.com/zarubinvibe/lynceuz) · [ZIP](https://github.com/zarubinvibe/lynceuz/archive/refs/heads/main.zip) |
-| 项目 | Iriz | macOS 菜单栏听写：语音在你自己的 Mac 上解码，键盘布局自动纠正，口述可以直接变成给智能体的任务。 | [仓库](https://github.com/zarubinvibe/iriz) · [ZIP](https://github.com/zarubinvibe/iriz/archive/refs/heads/main.zip) |
-| 项目 | Mantoz | 把一个想法摆到五百个并不存在的人面前，然后告诉你每个群体是怎么答的。 | [仓库](https://github.com/zarubinvibe/mantoz) · [ZIP](https://github.com/zarubinvibe/mantoz/archive/refs/heads/main.zip) |
-| 项目 | Koiz | 所有项目共用一份教训库。每次失败都追到原因，原因不被钩子、闸门或测试关掉，就一直挂在那里。 | [仓库](https://github.com/zarubinvibe/koiz) · [ZIP](https://github.com/zarubinvibe/koiz/archive/refs/heads/main.zip) |
+| 类型 | 名称 | 做什么 | 如何帮到这个项目 | 获取 |
+|---|---|---|---|---|
+| 项目 | Athena | 可携带的智能体操作系统：在新的 Mac 上重建 Claude 与 Codex 的工作环境。 | 把 Koiz 随工作环境一起带上：教训库和它的钩子一次就落到新机器上。 | [仓库](https://github.com/zarubinvibe/athena) · [ZIP](https://github.com/zarubinvibe/athena/archive/refs/heads/main.zip) |
+| 项目 | Helioz | 全天候的智能体工作传送带，带可验证的完成标记和按目标做出的夜间决策。 | 在夜间流程前调用 Koiz 的闸门：未被钉住的重复会把夜里的运行拦下来。 | [仓库](https://github.com/zarubinvibe/helioz) · [ZIP](https://github.com/zarubinvibe/helioz/archive/refs/heads/main.zip) |
+| 项目 | Mnemazine | 本地优先的记忆系统：把原始材料变成可复用的、已核验的知识。 | 以带反向链接的笔记接收教训，教训库因此进入共享的知识图谱。 | [仓库](https://github.com/zarubinvibe/mnemazine) · [ZIP](https://github.com/zarubinvibe/mnemazine/archive/refs/heads/main.zip) |
+| 项目 | Themiz | 面向俄罗斯诉讼的多智能体助手，本地识别扫描件，五位法学家组成合议审阅。 | 为 Koiz 提供真实失败的来源：法务流水线出问题的方式和工具链不一样。 | [仓库](https://github.com/zarubinvibe/themiz) · [ZIP](https://github.com/zarubinvibe/themiz/archive/refs/heads/main.zip) |
+| 项目 | Zeuz | 工作流工厂：把一个想法变成带规则、闸门、可观测性和回放的多智能体系统。 | 把 Koiz 的闸门接进它搭建的工作流：教训关掉一个步骤，而不是躺在报告里。 | [仓库](https://github.com/zarubinvibe/zeuz) · [ZIP](https://github.com/zarubinvibe/zeuz/archive/refs/heads/main.zip) |
+| 项目 | Lynceuz | 以零成本收集公开网页证据；安全路径走完时，它会给出诚实的理由并停下。 | 向外找库里没有的东西：在你自己追因之前，先找到别人对同一麻烦的记录。 | [仓库](https://github.com/zarubinvibe/lynceuz) · [ZIP](https://github.com/zarubinvibe/lynceuz/archive/refs/heads/main.zip) |
+| 项目 | Iriz | macOS 菜单栏听写：语音在你自己的 Mac 上解码，键盘布局自动纠正，口述可以直接变成给智能体的任务。 | 让你在失败的那一刻用口述说出原因——那时候打字太慢。 | [仓库](https://github.com/zarubinvibe/iriz) · [ZIP](https://github.com/zarubinvibe/iriz/archive/refs/heads/main.zip) |
+| 项目 | Mantoz | 把一个想法摆到五百个并不存在的人面前，然后告诉你每个群体是怎么答的。 | 在读者身上检验教训的措辞：只有作者看得懂的规则不算规则。 | [仓库](https://github.com/zarubinvibe/mantoz) · [ZIP](https://github.com/zarubinvibe/mantoz/archive/refs/heads/main.zip) |
+| 项目 | Koiz | 所有项目共用一份教训库。每次失败都追到原因，原因不被钩子、闸门或测试关掉，就一直挂在那里。 | 这就是它本身：教训库、失败当场的观察者，以及针对重复的闸门。 | [仓库](https://github.com/zarubinvibe/koiz) · [ZIP](https://github.com/zarubinvibe/koiz/archive/refs/heads/main.zip) |
 <!-- pantheon-family:end -->
 
 ## 许可证

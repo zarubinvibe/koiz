@@ -12,6 +12,16 @@ Two kinds of noise never reach the base. A watchdog that did its job is not a fa
 
 Capture is idempotent. Reading the same transcript twice does not double the records, because each candidate carries a fingerprint and a repeat raises a counter instead of adding a line.
 
+Capture works with two hands. The first one runs at session close: it reads the transcript
+and pulls out failed commands, gate refusals and repeats. The second sits on every tool and
+fires in the second something breaks — right where you say "oops, my mistake, fixing it now".
+The difference is not convenience: at the review the cause is already forgotten, and one
+second after the fall it is still in your head and costs one question.
+
+Both hands stay quiet when a guard did its job or when the evidence is shorter than three
+meaningful words. A guard that fired is not trouble, and a non-zero exit code on its own is
+not evidence: grep with no match, diff and test all return one.
+
 ## Storage appends and never rewrites
 
 The journal at `~/.claude/koiz/lessons.jsonl` is append-only. The state of the base is the result of replaying the journal from the beginning, which means every record keeps its history and nothing is silently edited away.

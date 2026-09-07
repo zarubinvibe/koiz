@@ -1,16 +1,16 @@
 # Graph Report - zarubinvibe__koiz  (2026-09-07)
 
 ## Corpus Check
-- 25 files · ~1,043,766 words
+- 25 files · ~1,046,690 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 294 nodes · 436 edges · 24 communities (22 shown, 2 thin omitted)
+- 301 nodes · 468 edges · 24 communities (22 shown, 2 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d921af66`
+- Built from commit: `f72b2308`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -41,18 +41,20 @@
 - [[_COMMUNITY_Community 23|Community 23]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `selftest()` - 25 edges
-2. `main()` - 24 edges
-3. `addLesson()` - 18 edges
-4. `state()` - 16 edges
-5. `collapse()` - 15 edges
+1. `selftest()` - 30 edges
+2. `main()` - 28 edges
+3. `addLesson()` - 19 edges
+4. `state()` - 18 edges
+5. `collapse()` - 16 edges
 6. `Koiz` - 14 edges
 7. `Koiz` - 14 edges
 8. `Койз` - 14 edges
-9. `active()` - 11 edges
+9. `active()` - 12 edges
 10. `debts()` - 11 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `addLesson()` --calls--> `expand()`  [EXTRACTED]
+  scripts/koiz.mjs → scripts/koiz-lib.mjs
 - `addLesson()` --calls--> `redact()`  [EXTRACTED]
   scripts/koiz.mjs → scripts/koiz-lib.mjs
 - `addLesson()` --calls--> `kebab()`  [EXTRACTED]
@@ -61,18 +63,16 @@
   scripts/koiz.mjs → scripts/koiz-capture.mjs
 - `addLesson()` --calls--> `fp()`  [EXTRACTED]
   scripts/koiz.mjs → scripts/koiz-lib.mjs
-- `collapse()` --calls--> `jaccard()`  [EXTRACTED]
-  scripts/koiz.mjs → scripts/koiz-lib.mjs
 
 ## Communities (24 total, 2 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.13
-Nodes (49): ackDebt(), active(), activeRules(), addLesson(), argOf(), args, asJson, ask() (+41 more)
+Nodes (52): ackDebt(), active(), activeRules(), addLesson(), argOf(), args, asJson, ask() (+44 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.14
-Nodes (17): captureTranscript(), classOf(), HOMES, META, text(), THIN(), covers(), fp() (+9 more)
+Cohesion: 0.12
+Nodes (21): captureTranscript(), classOf(), HOMES, META, NOISE, noteFailure(), parseLessonsMd(), text() (+13 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.1
@@ -155,7 +155,7 @@ Cohesion: 0.4
 Nodes (4): Онбординг: первый запуск по шагам, Как обновляться, Если пригодилось, code:bash (node scripts/koiz.mjs add --what "скрипт пошел по симлинку и)
 
 ## Knowledge Gaps
-- **160 isolated node(s):** `BUDGET`, `GUARD_SCORE`, `COMMON_TOOLS`, `args`, `asJson` (+155 more)
+- **162 isolated node(s):** `BUDGET`, `GUARD_SCORE`, `COMMON_TOOLS`, `args`, `VALUE_FLAGS` (+157 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -163,11 +163,11 @@ Nodes (4): Онбординг: первый запуск по шагам, Как
 _Questions this graph is uniquely positioned to answer:_
 
 - **What connects `BUDGET`, `GUARD_SCORE`, `COMMON_TOOLS` to the rest of the system?**
-  _160 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _162 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.13 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.14 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.12 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.1 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
